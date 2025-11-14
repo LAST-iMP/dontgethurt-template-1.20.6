@@ -1,0 +1,7 @@
+{
+  "itemGroup.dgh": "Example Mod Tab",
+  "block.dgh.example_block": "Example Block",
+  "item.dgh.example_item": "Example Item",
+  "gui.dgh.health_gui.title": "健康状态",
+  "health_saner": "健康扫描仪"
+}
