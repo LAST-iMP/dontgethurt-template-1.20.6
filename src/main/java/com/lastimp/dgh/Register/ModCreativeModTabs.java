@@ -15,9 +15,9 @@ public class ModCreativeModTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab",
             () -> CreativeModeTab.builder()
                     .withTabsBefore(CreativeModeTabs.COMBAT)
-                    .icon(() -> ModItems.EXAMPLE_ITEM.get().getDefaultInstance())
+                    .icon(() -> ModItems.HEALTH_SCANNER.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
-                        output.accept(ModItems.EXAMPLE_ITEM.get());
+                        output.accept(ModItems.HEALTH_SCANNER.get());
                         output.accept(ModItems.OPERATING_BED_BLOCK_ITEM.get());
                     })
                     .build()

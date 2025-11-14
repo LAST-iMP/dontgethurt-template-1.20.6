@@ -1,6 +1,7 @@
 package com.lastimp.dgh.Register;
 
 import com.lastimp.dgh.block.OperatingBedBlock;
+import com.lastimp.dgh.item.HealthScanner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -32,10 +33,11 @@ public class ModItems {
             OPERATING_BED_BLOCK
     );
 
-    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem(
-            Component.translatable("health_saner").toString(),
-            Item::new,
+    public static final DeferredItem<Item> HEALTH_SCANNER = ITEMS.registerItem(
+            "health_saner",
+            HealthScanner::new,
             new Item.Properties()
+                    .stacksTo(1)
     );
 
     public static void register(IEventBus eventBus) {

@@ -9,8 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class HealthScanner extends Item {
-    public HealthScanner() {
-        super(new Properties());
+
+    public HealthScanner(Properties properties) {
+        super(properties);
     }
 
     @Override
