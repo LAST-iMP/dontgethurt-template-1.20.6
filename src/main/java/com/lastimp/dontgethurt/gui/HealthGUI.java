@@ -59,32 +59,42 @@ public class HealthGUI extends Screen {
 
         Player player = mc.player;
         // 获取玩家身体状态数据（通过Capability）
-        IPlayerHealthCapability medicalData = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
-        if (medicalData == null) return;
+        IPlayerHealthCapability healthData = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
+        if (healthData == null) return;
 
-        PoseStack poseStack = event.getPoseStack();
-        int screenWidth = event.getWindow().getGuiScaledWidth();
-        int screenHeight = event.getWindow().getGuiScaledHeight();
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+        int screenWidth = guiGraphics.guiWidth();
+        int screenHeight = guiGraphics.guiHeight();
 
         // 计算HUD位置：右上角（距离屏幕边缘10像素）
         int panelX = screenWidth - PANEL_WIDTH - 10;
         int panelY = 10;
 
         // 1. 绘制HUD半透明背景
-        drawPanelBackground(poseStack, panelX, panelY);
+        drawPanelBackground(guiGraphics, panelX, panelY);
 
-        // 2. 绘制各个身体状态（垂直排列）
-        int currentY = panelY + 10; // 面板内上边距10像素
-        drawTemperature(poseStack, panelX + 10, currentY, medicalData);
-        currentY += ITEM_SPACING;
-        drawHydration(poseStack, panelX + 10, currentY, medicalData);
-        currentY += ITEM_SPACING;
-        drawFatigue(poseStack, panelX + 10, currentY, medicalData);
+//        // 2. 绘制各个身体状态（垂直排列）
+//        int currentY = panelY + 10; // 面板内上边距10像素
+//        drawTemperature(poseStack, panelX + 10, currentY, healthData);
+//        currentY += ITEM_SPACING;
+//        drawHydration(poseStack, panelX + 10, currentY, healthData);
+//        currentY += ITEM_SPACING;
+//        drawFatigue(poseStack, panelX + 10, currentY, healthData);
 
-        // 3. 绘制受伤提示（如果受伤）
-        if (medicalData.isWounded()) {
-            drawWoundedWarning(poseStack, panelX + 10, currentY + ITEM_SPACING);
-        }
+//        // 3. 绘制受伤提示（如果受伤）
+//        if (healthData.isWounded()) {
+//            drawWoundedWarning(poseStack, panelX + 10, currentY + ITEM_SPACING);
+//        }
+    }
+
+    private void drawPanelBackground(GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.fill(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, 0xCC000000);
+        guiGraphics.blit(
+                HUD_BACKGROUND,
+                x, y,  // 屏幕上的绘制位置
+                0, 0,  // 纹理中要绘制的区域起始坐标（左上角）
+                PANEL_WIDTH, PANEL_HEIGHT  // 绘制的宽高（需与纹理对应区域尺寸一致）
+        );
     }
 
     @Override
