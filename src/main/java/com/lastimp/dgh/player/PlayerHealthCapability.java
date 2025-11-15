@@ -1,9 +1,6 @@
 package com.lastimp.dgh.player;
 
-import com.lastimp.dgh.core.AnyBodyCondition;
-import com.lastimp.dgh.core.AnyPart;
-import com.lastimp.dgh.core.BodyComponents;
-import com.lastimp.dgh.core.Extremities;
+import com.lastimp.dgh.core.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
@@ -11,7 +8,7 @@ import java.util.HashMap;
 
 public class PlayerHealthCapability implements IPlayerHealthCapability {
 
-    private HashMap<BodyComponents, Extremities> components = new HashMap<>();
+    private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
 
     private boolean onBed;
 
@@ -20,6 +17,9 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
         components.put(BodyComponents.RIGHT_ARM, new Extremities());
         components.put(BodyComponents.LEFT_LEG, new Extremities());
         components.put(BodyComponents.RIGHT_LEG, new Extremities());
+        components.put(BodyComponents.HEAD, new Head());
+        components.put(BodyComponents.TORSO, new Torso());
+        components.put(BodyComponents.BLOOD, new PlayerBlood());
     }
 
     @Override
@@ -28,25 +28,25 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
     }
 
     @Override
-    public AnyPart setComponent(BodyComponents component, AnyBodyCondition condition, float value) {
+    public IAbstractBody setComponent(BodyComponents component, BodyCondition condition, float value) {
         components.get(component).setCondition(condition, value);
         return components.get(component);
     }
 
     @Override
-    public AnyPart addComponent(BodyComponents component, AnyBodyCondition condition, float value) {
+    public IAbstractBody addComponent(BodyComponents component, BodyCondition condition, float value) {
         components.get(component).addCondition(condition, value);
         return components.get(component);
     }
 
     @Override
-    public AnyPart getComponent(BodyComponents component) {
+    public IAbstractBody getComponent(BodyComponents component) {
         return components.get(component);
     }
 
     @Override
-    public float getComponentCondition(BodyComponents component, AnyBodyCondition condition) {
-        return components.get(component).getCondition(AnyBodyCondition.BLEED);
+    public float getComponentCondition(BodyComponents component, BodyCondition condition) {
+        return components.get(component).getCondition(BodyCondition.BLEED);
     }
 
     @Override

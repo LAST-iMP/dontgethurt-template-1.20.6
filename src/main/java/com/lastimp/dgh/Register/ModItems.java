@@ -2,6 +2,8 @@ package com.lastimp.dgh.Register;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.block.OperatingBedBlock;
+import com.lastimp.dgh.item.BloodPacks;
+import com.lastimp.dgh.item.BloodScanner;
 import com.lastimp.dgh.item.HealthScanner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
@@ -38,6 +40,20 @@ public class ModItems {
     public static final DeferredItem<Item> HEALTH_SCANNER = ITEMS.registerItem(
             "health_saner",
             HealthScanner::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
+    public static final DeferredItem<Item> BLOOD_PACK = ITEMS.registerItem(
+            "blood_pack",
+            BloodPacks::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<BloodScanner> BLOOD_SCANNER = ITEMS.registerItem(
+            "blood_scanner",
+            BloodScanner::new,
             new Item.Properties()
                     .stacksTo(1)
     );
