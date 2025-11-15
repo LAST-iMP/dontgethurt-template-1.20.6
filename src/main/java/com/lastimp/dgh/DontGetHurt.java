@@ -2,8 +2,12 @@ package com.lastimp.dgh;
 
 import com.lastimp.dgh.Register.ModCreativeModTabs;
 import com.lastimp.dgh.Register.ModItems;
+import com.lastimp.dgh.Register.ModMenus;
+import com.lastimp.dgh.gui.HealthScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -28,14 +32,13 @@ public class DontGetHurt
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public DontGetHurt(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
         ModItems.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
+        ModMenus.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
-        modEventBus.addListener(ModItems::addCreative);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -66,11 +69,17 @@ public class DontGetHurt
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     static class ClientModEvents {
+
         @SubscribeEvent
         static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        }
+
+        @SubscribeEvent
+        public static void registerScreens(final RegisterMenuScreensEvent event) {
+            event.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
         }
     }
 }
