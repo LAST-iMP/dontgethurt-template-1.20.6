@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractBody implements IAbstractBody{
@@ -18,7 +19,7 @@ public abstract class AbstractBody implements IAbstractBody{
         }
     }
 
-    public abstract BodyCondition[] getBodyConditions();
+    public abstract List<BodyCondition> getBodyConditions();
 
     @Override
     public float getCondition(BodyCondition key) {

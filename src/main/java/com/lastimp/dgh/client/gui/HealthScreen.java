@@ -3,6 +3,7 @@ package com.lastimp.dgh.client.gui;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
 import com.lastimp.dgh.common.Register.ModCapabilities;
+import com.lastimp.dgh.common.core.AbstractBody;
 import com.lastimp.dgh.common.core.BodyComponents;
 import com.lastimp.dgh.common.core.BodyCondition;
 import com.lastimp.dgh.common.core.IAbstractBody;
@@ -50,12 +51,12 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
         // 清理旧的
         componentWidgets.clear();
-        this.addHealthWidget(55, 8, 27, 29, BodyComponents.HEAD);
-        this.addHealthWidget(54,41, 28, 38, BodyComponents.TORSO);
-        this.addHealthWidget(41, 42, 10, 44, BodyComponents.LEFT_ARM);
-        this.addHealthWidget(86, 42, 10, 44, BodyComponents.RIGHT_ARM);
-        this.addHealthWidget(53, 80, 11, 43, BodyComponents.LEFT_LEG);
-        this.addHealthWidget(72, 80, 11, 43, BodyComponents.RIGHT_LEG);
+        this.addHealthWidget(35, 8, 27, 29, BodyComponents.HEAD);
+        this.addHealthWidget(34,41, 28, 38, BodyComponents.TORSO);
+        this.addHealthWidget(21, 42, 10, 44, BodyComponents.LEFT_ARM);
+        this.addHealthWidget(66, 42, 10, 44, BodyComponents.RIGHT_ARM);
+        this.addHealthWidget(33, 80, 11, 43, BodyComponents.LEFT_LEG);
+        this.addHealthWidget(52, 80, 11, 43, BodyComponents.RIGHT_LEG);
 
         conditionWidgets.clear();
         for (BodyCondition condition : BodyCondition.healthScannerConditions()) {
@@ -78,7 +79,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     private void addConditionWidget(BodyCondition condition) {
         HealthConditionWidget w = new HealthConditionWidget(
-                107, 18, condition.texture
+                70, 16, condition.texture
         );
         conditionWidgets.put(condition, w);
         this.addRenderableWidget(w);
@@ -87,15 +88,39 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!check()) return;
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        if (selectedComponent != null) {
-            Player player = GuiOpenWrapper.MINECRAFT.get().player;
-            IPlayerHealthCapability healthData = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
-            IAbstractBody bodyPart = healthData.getComponent(this.selectedComponent);
-
-        }
+        this.renderCondition(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
+
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    private void renderCondition(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (selectedComponent == null) return;
+        Player player = GuiOpenWrapper.MINECRAFT.get().player;
+        IPlayerHealthCapability healthData = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
+
+        for (HealthConditionWidget widget : this.conditionWidgets.values()){
+            widget.visible = false;
+        }
+
+        int widgetCount = 0;
+        AbstractBody bodyPart = (AbstractBody) healthData.getComponent(this.selectedComponent);
+        List<BodyCondition> conditions = bodyPart.getBodyConditions();
+        for (BodyCondition condition : conditions) {
+            HealthConditionWidget widget = this.conditionWidgets.get(condition);
+            if (!BodyCondition.healthScannerConditions().contains(condition)) continue;
+            if (!condition.abnormal(bodyPart.getCondition(condition))) continue;
+            if (widgetCount > 12) break;
+
+            widget.setPosition(
+                    this.leftPos + 85 + (widgetCount % 2) * 72,
+                    this.topPos + 11 + (widgetCount / 2) * 18
+            );
+            widget.setSeverity(bodyPart.getCondition(condition));
+            widget.visible = true;
+            widgetCount += 1;
+        }
     }
 
     @Override
@@ -123,6 +148,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     @Override
     public void onClose() {
         GuiOpenWrapper.MINECRAFT.get().setScreen(null);
+
         super.onClose();
     }
 

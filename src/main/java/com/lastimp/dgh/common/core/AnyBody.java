@@ -1,12 +1,14 @@
 package com.lastimp.dgh.common.core;
 
+import java.util.List;
+
 public class AnyBody extends AbstractBody {
-    private static BodyCondition[] ANY_BODY_CONDITIONS;
+    private static List<BodyCondition> ANY_BODY_CONDITIONS;
 
     @Override
-    public BodyCondition[] getBodyConditions() {
+    public List<BodyCondition> getBodyConditions() {
         if (ANY_BODY_CONDITIONS == null) {
-            ANY_BODY_CONDITIONS = new BodyCondition[]{
+            ANY_BODY_CONDITIONS = List.of(new BodyCondition[]{
                     BodyCondition.BURN,
                     BodyCondition.BLEED,
                     BodyCondition.INTERNAL_INJURY,
@@ -15,7 +17,7 @@ public class AnyBody extends AbstractBody {
                     BodyCondition.FOREIGN_OBJECT,
                     BodyCondition.BANDAGED,
                     BodyCondition.OINMENTED
-            };
+            });
         }
         return ANY_BODY_CONDITIONS;
     }

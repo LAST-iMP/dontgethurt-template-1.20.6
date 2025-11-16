@@ -4,6 +4,8 @@ import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.List;
+
 public enum BodyCondition {
     //any body conditions
     BURN,
@@ -31,15 +33,15 @@ public enum BodyCondition {
     public final float maxValue;
     public final ResourceLocation texture;
 
-    private static BodyCondition[] BLOOD_CONDITIONS;
-    private static BodyCondition[] HEALTH_SCANNER_CONDITIONS;
-    private static BodyCondition[] BLOOD_SCANNER_CONDITIONS;
+    private static List<BodyCondition> BLOOD_CONDITIONS;
+    private static List<BodyCondition> HEALTH_SCANNER_CONDITIONS;
+    private static List<BodyCondition> BLOOD_SCANNER_CONDITIONS;
 
 
     private final float EPS = 0.005f;
 
     BodyCondition() {
-        this(0.0f, 0.0f, 1.0f, "textures/conditionIcons/burn.png");
+        this(0.5f, 0.0f, 1.0f, "container/condition_icons/burn");
     }
 
     BodyCondition(String path) {
@@ -63,9 +65,9 @@ public enum BodyCondition {
         return Component.translatable(this.name()).getString();
     }
 
-    public static BodyCondition[] bloodConditions() {
+    public static List<BodyCondition> bloodConditions() {
         if (BLOOD_CONDITIONS == null) {
-            BLOOD_CONDITIONS = new BodyCondition[]{
+            BLOOD_CONDITIONS = List.of(new BodyCondition[]{
                     BLOOD_VOLUME,
                     SEPSIS,
                     HEMOTRANSFUSION_SHOCK,
@@ -73,14 +75,14 @@ public enum BodyCondition {
                     BLOOD_PRESSURE,
                     PH_LEVEL,
                     IMMUNITY
-            };
+            });
         }
         return BLOOD_CONDITIONS;
     }
 
-    public static BodyCondition[] healthScannerConditions() {
+    public static List<BodyCondition> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
-            HEALTH_SCANNER_CONDITIONS = new BodyCondition[]{
+            HEALTH_SCANNER_CONDITIONS = List.of(new BodyCondition[]{
                     BURN,
                     INTERNAL_INJURY,
                     OPEN_WOUND,
@@ -89,14 +91,14 @@ public enum BodyCondition {
 
                     BANDAGED,
                     OINMENTED,
-            };
+            });
         }
         return HEALTH_SCANNER_CONDITIONS;
     }
 
-    public static BodyCondition[] bloodScannerConditions() {
+    public static List<BodyCondition> bloodScannerConditions() {
         if (BLOOD_SCANNER_CONDITIONS == null) {
-            BLOOD_SCANNER_CONDITIONS = new BodyCondition[]{
+            BLOOD_SCANNER_CONDITIONS = List.of(new BodyCondition[]{
                     BLOOD_VOLUME,
                     SEPSIS,
                     HEMOTRANSFUSION_SHOCK,
@@ -104,7 +106,7 @@ public enum BodyCondition {
                     BLOOD_PRESSURE,
                     PH_LEVEL,
                     IMMUNITY
-            };
+            });
         }
         return BLOOD_SCANNER_CONDITIONS;
     }
