@@ -41,7 +41,7 @@ public enum BodyCondition {
     private final float EPS = 0.005f;
 
     BodyCondition() {
-        this(0.5f, 0.0f, 1.0f, "container/condition_icons/burn");
+        this(0.0f, 0.0f, 1.0f, "container/condition_icons/burn");
     }
 
     BodyCondition(String path) {
@@ -62,7 +62,11 @@ public enum BodyCondition {
 
     @Override
     public String toString() {
-        return Component.translatable(this.name()).getString();
+        return getComponent().getString();
+    }
+
+    public Component getComponent() {
+        return Component.translatable(this.name());
     }
 
     public static List<BodyCondition> bloodConditions() {

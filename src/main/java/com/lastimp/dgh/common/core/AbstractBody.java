@@ -23,7 +23,7 @@ public abstract class AbstractBody implements IAbstractBody{
 
     @Override
     public float getCondition(BodyCondition key) {
-        return state.getOrDefault(key, 0.0f);
+        return state.getOrDefault(key, key.defaultValue);
     }
 
     @Override

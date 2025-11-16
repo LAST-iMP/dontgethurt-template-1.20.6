@@ -1,6 +1,7 @@
 package com.lastimp.dgh.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -27,24 +28,29 @@ public class HealthConditionWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int i, int i1, float v) {
         if (!this.visible || !this.active) return;
-        // draw icon from texture (if you want to use atlas, supply proper tex size)
-        guiGraphics.blitSprite(texture, this.getX() + 3, this.getY() + 2, iconSize, iconSize);
-
         // draw bar background
-        int bgColor = 0x3A3C3B; // ARGB
-        guiGraphics.fill(this.getX(), this.getY(), this.width, this.height, bgColor);
-
-        // draw filled portion
-        int filled = (int) (this.width * severity);
-        int fgColor = 0xFF0700;
-        guiGraphics.fill(this.getX(), this.getY(), filled, this.height, fgColor);
+        int bgColor = 0xFF3A3C3B; // ARGB
+        guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bgColor);
 
         // optional border
         int borderColor = 0xFF000000;
         guiGraphics.renderOutline(this.getX(), this.getY(), this.width, this.height, borderColor);
 
+        // draw filled portion
+        int filled = (int) (this.width * severity);
+        int fgColor = 0xFFFF7471;
+        guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + filled - 2, this.getY() + this.height - 2, fgColor);
+
+        // draw icon from texture (if you want to use atlas, supply proper tex size)
+        guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
+
         int stringColor = 0xFF000000;
-        guiGraphics.drawString(Font.ALPHA_CUTOFF, this.getMessage(), this.getX(), this.getY(), stringColor);
+        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
+        mc.player.sendSystemMessage(Component.literal(String.valueOf(this.severity)));
+        guiGraphics.drawCenteredString(mc.font, this.getMessage(),
+                this.getX() + 3 + (this.width + iconSize) / 2,
+                this.getY() + (this.height - mc.font.lineHeight) / 2,
+                stringColor);
 
         // show tooltip when hovered
 //        if (this.isMouseOver(mouseX, mouseY)) {

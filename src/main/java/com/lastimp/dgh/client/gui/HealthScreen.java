@@ -79,7 +79,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     private void addConditionWidget(BodyCondition condition) {
         HealthConditionWidget w = new HealthConditionWidget(
-                70, 16, condition.texture
+                70, 16, condition.getComponent(), condition.texture
         );
         conditionWidgets.put(condition, w);
         this.addRenderableWidget(w);
