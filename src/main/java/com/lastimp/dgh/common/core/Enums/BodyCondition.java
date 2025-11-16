@@ -1,4 +1,4 @@
-package com.lastimp.dgh.common.core;
+package com.lastimp.dgh.common.core.Enums;
 
 import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.network.chat.Component;
@@ -31,6 +31,7 @@ public enum BodyCondition {
     public final float defaultValue;
     public final float minValue;
     public final float maxValue;
+    public final float factor;
     public final ResourceLocation texture;
 
     private static List<BodyCondition> BLOOD_CONDITIONS;
@@ -41,23 +42,23 @@ public enum BodyCondition {
     private final float EPS = 0.005f;
 
     BodyCondition() {
-        this(0.0f, 0.0f, 1.0f, "container/condition_icons/burn");
+        this(0.0f, 0.0f, 1.0f, 20.0f, "container/condition_icons/burn");
     }
 
     BodyCondition(String path) {
-        this(0.0f, 0.0f, 1.0f, path);
+        this(0.0f, 0.0f, 1.0f, 20.0f, path);
     }
 
-    BodyCondition(float defaultValue, float minValue, float maxValue, String path) {
+    BodyCondition(float defaultValue, float minValue, float maxValue, float factor, String path) {
         this.defaultValue = defaultValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
+        this.factor = factor;
         this.texture = new ResourceLocation(DontGetHurt.MODID, path);
     }
 
     public boolean abnormal(float value) {
-        return true;
-//        return defaultValue < value - EPS || defaultValue > value + EPS;
+        return defaultValue < value - EPS || defaultValue > value + EPS;
     }
 
     @Override

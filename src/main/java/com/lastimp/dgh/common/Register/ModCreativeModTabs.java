@@ -20,9 +20,11 @@ public class ModCreativeModTabs {
                     .icon(() -> ModItems.HEALTH_SCANNER.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.HEALTH_SCANNER.get());
+                        output.accept(ModItems.BLOOD_SCANNER.get());
                         output.accept(ModItems.OPERATING_BED_BLOCK_ITEM.get());
                         output.accept(ModItems.BLOOD_PACK.get());
-                        output.accept(ModItems.BLOOD_SCANNER.get());
+                        output.accept(ModItems.BANDAGE.get());
+                        output.accept(ModItems.MORPHINE.get());
                     })
                     .build()
     );

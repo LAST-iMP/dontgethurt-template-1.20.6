@@ -1,4 +1,6 @@
-package com.lastimp.dgh.common.core;
+package com.lastimp.dgh.common.core.bodyPart;
+
+import com.lastimp.dgh.common.core.Enums.BodyCondition;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
-package com.lastimp.dgh.common.core;
+package com.lastimp.dgh.common.core.bodyPart;
 
+import com.lastimp.dgh.common.core.Enums.BodyCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractBody implements IAbstractBody{
+public abstract class AbstractBody implements IAbstractBody {
 
     private final HashMap<BodyCondition, Float> state = new HashMap<>();
 
@@ -20,6 +21,11 @@ public abstract class AbstractBody implements IAbstractBody{
     }
 
     public abstract List<BodyCondition> getBodyConditions();
+
+    @Override
+    public boolean hasCondition(BodyCondition key) {
+        return state.containsKey(key);
+    }
 
     @Override
     public float getCondition(BodyCondition key) {

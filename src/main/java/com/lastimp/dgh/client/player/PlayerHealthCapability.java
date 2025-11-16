@@ -1,6 +1,8 @@
 package com.lastimp.dgh.client.player;
 
-import com.lastimp.dgh.common.core.*;
+import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.common.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 

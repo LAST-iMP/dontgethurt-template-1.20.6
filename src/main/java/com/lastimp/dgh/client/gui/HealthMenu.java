@@ -19,15 +19,6 @@ public class HealthMenu extends AbstractContainerMenu {
         super(ModMenus.HEALTH_MENU.get(), pContainerId);
         // 检查slot的多少
         checkContainerSize(inv,1);
-        // 赋值data
-//        this.data = data;
-//        FirstMenuBlockEntity firstMenuBlockEntity = (FirstMenuBlockEntity) entity;
-//        ItemStackHandler itemHandler = firstMenuBlockEntity.getItemHandler();
-//        // 添加一个slot在menu上。
-//        this.addSlot(new SlotItemHandler(itemHandler,0,80,32));
-//        // 添加data 用于数据同步的
-//        addDataSlots(data);
-        // 添加玩家背包和热键栏的slot，关于slot的讲解在下面。
         layoutPlayerInventorySlots(inv);
     }
 

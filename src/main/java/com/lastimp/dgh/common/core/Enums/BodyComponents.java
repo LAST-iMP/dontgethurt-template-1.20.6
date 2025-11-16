@@ -1,4 +1,4 @@
-package com.lastimp.dgh.common.core;
+package com.lastimp.dgh.common.core.Enums;
 
 
 import net.minecraft.network.chat.Component;
@@ -16,5 +16,9 @@ public enum BodyComponents {
     @Override
     public String toString() {
         return Component.translatable(this.name()).getString();
+    }
+
+    public static BodyComponents random() {
+        return values()[(int) (Math.random() * 6)];
     }
 }

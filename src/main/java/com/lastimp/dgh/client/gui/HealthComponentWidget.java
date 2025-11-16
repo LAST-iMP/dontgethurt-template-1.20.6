@@ -1,14 +1,10 @@
 package com.lastimp.dgh.client.gui;
 
-import com.lastimp.dgh.common.core.BodyComponents;
+import com.lastimp.dgh.common.core.Enums.BodyComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 public class HealthComponentWidget extends Button {
     public final BodyComponents id;

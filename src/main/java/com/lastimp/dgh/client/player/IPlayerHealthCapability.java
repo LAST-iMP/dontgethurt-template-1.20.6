@@ -1,8 +1,8 @@
 package com.lastimp.dgh.client.player;
 
-import com.lastimp.dgh.common.core.BodyComponents;
-import com.lastimp.dgh.common.core.BodyCondition;
-import com.lastimp.dgh.common.core.IAbstractBody;
+import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.common.core.bodyPart.IAbstractBody;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 

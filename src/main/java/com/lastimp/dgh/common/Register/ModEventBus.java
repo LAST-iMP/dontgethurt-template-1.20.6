@@ -3,9 +3,11 @@ package com.lastimp.dgh.common.Register;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.PlayerHealthProvider;
 import com.lastimp.dgh.network.ClientPayloadHandler;
-import com.lastimp.dgh.network.MySelectBodyData;
+import com.lastimp.dgh.network.DataPack.MySelectBodyData;
+import com.lastimp.dgh.network.DataPack.MySynBodyConditionData;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -31,8 +33,16 @@ public class ModEventBus {
                 MySelectBodyData.TYPE,
                 MySelectBodyData.STREAM_CODEC,
                 new DirectionalPayloadHandler<>(
-                        ClientPayloadHandler::handleData,
-                        ServerPayloadHandler::handleData
+                        ClientPayloadHandler::handleSelectBodyData,
+                        ServerPayloadHandler::handleSelectBodyData
+                )
+        );
+        registrar.playBidirectional(
+                MySynBodyConditionData.TYPE,
+                MySynBodyConditionData.STREAM_CODEC,
+                new DirectionalPayloadHandler<>(
+                        ClientPayloadHandler::handleSynBodyConditionData,
+                        ServerPayloadHandler::handleSynBodyConditionData
                 )
         );
     }

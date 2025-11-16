@@ -1,4 +1,4 @@
-package com.lastimp.dgh.network;
+package com.lastimp.dgh.network.DataPack;
 
 import com.lastimp.dgh.DontGetHurt;
 import io.netty.buffer.ByteBuf;
