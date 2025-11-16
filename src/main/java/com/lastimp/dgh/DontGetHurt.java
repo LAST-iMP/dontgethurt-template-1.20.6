@@ -1,10 +1,9 @@
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.Register.ModCreativeModTabs;
-import com.lastimp.dgh.Register.ModItems;
-import com.lastimp.dgh.Register.ModMenus;
-import com.lastimp.dgh.gui.HealthScreen;
-import net.minecraft.client.gui.screens.MenuScreens;
+import com.lastimp.dgh.common.Register.ModCreativeModTabs;
+import com.lastimp.dgh.common.Register.ModItems;
+import com.lastimp.dgh.common.Register.ModMenus;
+import com.lastimp.dgh.client.gui.HealthScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -56,6 +55,9 @@ public class DontGetHurt
         LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
 
         Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
+//
+//        // register network messages
+//        ModNetwork.registerMessages();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -83,4 +85,3 @@ public class DontGetHurt
         }
     }
 }
-

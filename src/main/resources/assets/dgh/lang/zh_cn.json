@@ -1,6 +1,37 @@
 {
-  "itemGroup.dgh": "Example Mod Tab",
-  "block.dgh.example_block": "Example Block",
-  "item.dgh.example_item": "Example Item",
-  "gui.dgh.health_gui.title": "健康状态"
+  "itemGroup.dgh": "dgh",
+  "dgh.configuration.title": "Example Mod Configs",
+  "dgh.configuration.section.examplemod.common.toml": "Example Mod Configs",
+  "dgh.configuration.section.examplemod.common.toml.title": "Example Mod Configs",
+  "dgh.configuration.items": "Item List",
+  "dgh.configuration.logDirtBlock": "Log Dirt Block",
+  "dgh.configuration.magicNumberIntroduction": "Magic Number Text",
+  "dgh.configuration.magicNumber": "Magic Number",
+
+
+  "BURN": "烧伤",
+  "BLEED": "出血",
+  "INTERNAL_INJURY": "内伤",
+  "OPEN_WOUND": "开放伤口",
+  "INFECTION": "感染",
+  "FOREIGN_OBJECT": "体内异物",
+
+  "BANDAGED": "已包扎",
+  "OINMENTED": "已涂药",
+
+  "BLOOD_VOLUME": "血容量",
+  "SEPSIS": "败血症",
+  "HEMOTRANSFUSION_SHOCK": "输血性休克",
+  "BLOOD_LOSS": "失血",
+  "BLOOD_PRESSURE": "血压",
+  "PH_LEVEL": "酸碱性",
+  "IMMUNITY": "免疫力",
+
+  "gui.dgh.health_gui.title": "健康状态",
+  "item.dgh.health_scanner": "健康扫描仪",
+  "item.dgh.blood_scanner": "血液扫描仪",
+  "item.dgh.blood_pack": "血袋",
+  "item.dgh.bandage": "绷带",
+  "item.dgh.morphine": "吗啡",
+  "block.dgh.operating_bed": "手术床"
 }

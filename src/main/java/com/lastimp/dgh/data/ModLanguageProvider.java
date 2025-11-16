@@ -1,6 +1,6 @@
 package com.lastimp.dgh.data;
 
-import com.lastimp.dgh.Register.ModItems;
+import com.lastimp.dgh.common.Register.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
