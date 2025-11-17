@@ -45,8 +45,15 @@ public class HealingHandler {
         return true;
     }
 
-    public static boolean useHealingItemOn(ItemStack itemStack, ServerPlayer target, ServerPlayer player, BodyComponents component) {
-        return true;
+    public static boolean useHealingItemOn(ItemStack itemStack, ServerPlayer target, BodyComponents component) {
+        AbstractHealingItem healingItem = (AbstractHealingItem) itemStack.getItem();
+        if (healingItem instanceof AbstractDirectHealItems item) {
+            return item.heal(target);
+        } else if (healingItem instanceof AbstractPartlyHealItem item) {
+            return item.heal(target, component);
+        } else {
+            return false;
+        }
     }
 
     public static HealthScreen getHealthScreen() {

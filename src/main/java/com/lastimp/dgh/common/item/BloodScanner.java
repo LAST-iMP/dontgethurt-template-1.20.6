@@ -8,6 +8,7 @@ import com.lastimp.dgh.common.core.Enums.OperationType;
 import com.lastimp.dgh.common.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -49,7 +50,7 @@ public class BloodScanner extends Item {
             player.sendSystemMessage(Component.literal(entity.getName().getString() + "的血液很正常"));
         } else {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                    target.getUUID(), null, OperationType.BLOOD_SCANN
+                    target.getUUID(), null, OperationType.BLOOD_SCANN, Minecraft.getInstance().player.registryAccess()
             ));
         }
     }

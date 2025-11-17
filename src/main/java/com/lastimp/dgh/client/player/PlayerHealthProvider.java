@@ -21,12 +21,6 @@ public class PlayerHealthProvider implements ICapabilityProvider<Player, Void, I
     }
 
     @Override
-    public boolean equals(Object o) {
-        // optional helper if needed
-        return this == o;
-    }
-
-    @Override
     public @Nullable IPlayerHealthCapability getCapability(Player o, Void unused) {
         return this.impl;
     }

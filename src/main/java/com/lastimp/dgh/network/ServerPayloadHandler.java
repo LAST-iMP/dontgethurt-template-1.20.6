@@ -53,7 +53,7 @@ public class ServerPayloadHandler {
 
                     PacketDistributor.sendToPlayer(
                             (ServerPlayer) context.player(),
-                            MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
+                            MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()), context.player().registryAccess())
                     );
                 })
                 .exceptionally(e -> {
@@ -70,7 +70,7 @@ public class ServerPayloadHandler {
                     ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
                     BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
 
-                    boolean success = HealingHandler.useHealingItemOn(stack, target, sourcePlayer, component);
+                    boolean success = HealingHandler.useHealingItemOn(stack, target, component);
                     if (success) {
                         stack.consume(1, target);
                     }

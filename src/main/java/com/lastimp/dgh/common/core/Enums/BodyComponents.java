@@ -11,7 +11,9 @@ public enum BodyComponents {
     HEAD,
     TORSO,
 
-    BLOOD;
+    BLOOD,
+
+    WHOLE_BODY;
 
     @Override
     public String toString() {

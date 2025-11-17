@@ -5,6 +5,7 @@ import com.lastimp.dgh.client.player.IPlayerHealthCapability;
 import com.lastimp.dgh.client.player.PlayerHealthCapability;
 import com.lastimp.dgh.common.core.Enums.OperationType;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -33,18 +34,18 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
         return TYPE;
     }
 
-    public static MyReadAllConditionData getInstance(UUID uuid, IPlayerHealthCapability health, OperationType operation) {
+    public static MyReadAllConditionData getInstance(UUID uuid, IPlayerHealthCapability health, OperationType operation, HolderLookup.Provider provider) {
         return new MyReadAllConditionData(
                 uuid.getMostSignificantBits(),
                 uuid.getLeastSignificantBits(),
-                health == null? new CompoundTag() : health.serializeNBT(null),
+                health == null ? new CompoundTag() : health.serializeNBT(provider),
                 operation.toString()
         );
     }
 
-    public static IPlayerHealthCapability getHealthFromInstance(CompoundTag tag) {
+    public static IPlayerHealthCapability getHealthFromInstance(CompoundTag tag, HolderLookup.Provider provider) {
         PlayerHealthCapability health = new PlayerHealthCapability();
-        health.deserializeNBT(null, tag);
+        health.deserializeNBT(provider, tag);
         return health;
     }
 }

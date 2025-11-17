@@ -70,21 +70,6 @@ public enum BodyCondition {
         return Component.translatable(this.name());
     }
 
-    public static List<BodyCondition> bloodConditions() {
-        if (BLOOD_CONDITIONS == null) {
-            BLOOD_CONDITIONS = List.of(new BodyCondition[]{
-                    BLOOD_VOLUME,
-                    SEPSIS,
-                    HEMOTRANSFUSION_SHOCK,
-                    BLOOD_LOSS,
-                    BLOOD_PRESSURE,
-                    PH_LEVEL,
-                    IMMUNITY
-            });
-        }
-        return BLOOD_CONDITIONS;
-    }
-
     public static List<BodyCondition> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
             HEALTH_SCANNER_CONDITIONS = List.of(new BodyCondition[]{

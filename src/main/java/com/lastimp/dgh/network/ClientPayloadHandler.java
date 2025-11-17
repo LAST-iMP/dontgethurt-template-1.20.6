@@ -45,7 +45,7 @@ public class ClientPayloadHandler {
 
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
-                    IPlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
+                    IPlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
                     OperationType operation = OperationType.valueOf(data.oper());
                     if (operation == OperationType.HEALTH_SCANN) {
                         healthScreen.setHealthData(health);

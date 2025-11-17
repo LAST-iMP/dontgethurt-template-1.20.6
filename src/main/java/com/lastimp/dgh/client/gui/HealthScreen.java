@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.lastimp.dgh.common.core.Enums.OperationType.HEALTH_SCANN;
+
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
 
@@ -153,7 +155,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     @Override
     protected void containerTick() {
         PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                this.menu.targetPlayer, null, OperationType.HEALTH_SCANN
+                this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
         ));
     }
 

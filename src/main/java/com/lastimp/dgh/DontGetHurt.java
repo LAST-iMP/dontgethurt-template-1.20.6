@@ -36,6 +36,7 @@ public class DontGetHurt
 {
     public static final String MODID = "dgh";
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static final float DELTA = 0.05f;
 
     public DontGetHurt(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
