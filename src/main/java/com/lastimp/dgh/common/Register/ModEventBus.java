@@ -3,6 +3,7 @@ package com.lastimp.dgh.common.Register;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.PlayerHealthProvider;
 import com.lastimp.dgh.network.ClientPayloadHandler;
+import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import com.lastimp.dgh.network.DataPack.MySelectBodyData;
 import com.lastimp.dgh.network.DataPack.MySynBodyConditionData;
 import com.lastimp.dgh.network.ServerPayloadHandler;
@@ -43,6 +44,14 @@ public class ModEventBus {
                 new DirectionalPayloadHandler<>(
                         ClientPayloadHandler::handleSynBodyConditionData,
                         ServerPayloadHandler::handleSynBodyConditionData
+                )
+        );
+        registrar.playBidirectional(
+                MyReadAllConditionData.TYPE,
+                MyReadAllConditionData.STREAM_CODEC,
+                new DirectionalPayloadHandler<>(
+                        ClientPayloadHandler::handleReadAllConditionData,
+                        ServerPayloadHandler::handleReadAllConditionData
                 )
         );
     }

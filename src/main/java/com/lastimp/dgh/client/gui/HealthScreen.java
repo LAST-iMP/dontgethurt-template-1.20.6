@@ -2,11 +2,14 @@ package com.lastimp.dgh.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
+import com.lastimp.dgh.client.player.PlayerHealthCapability;
+import com.lastimp.dgh.client.player.PlayerHealthProvider;
 import com.lastimp.dgh.common.Register.ModCapabilities;
 import com.lastimp.dgh.common.core.HealingSystem.HealingHandler;
 import com.lastimp.dgh.common.core.bodyPart.AbstractBody;
 import com.lastimp.dgh.common.core.Enums.BodyComponents;
 import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,10 +17,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
@@ -27,8 +32,8 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     private final List<HealthComponentWidget> componentWidgets = new ArrayList<>();
     private final HashMap<BodyCondition, HealthConditionWidget> conditionWidgets = new HashMap<>();
-    public static Player targetPlayer = null;
     private BodyComponents selectedComponent = null;
+    private static IPlayerHealthCapability healthData = null;
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -87,10 +92,15 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
+    private boolean check() {
+        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
+        // 跳过：菜单界面、无玩家、隐藏GUI（按F1)
+        return !(mc.level == null || mc.player == null || mc.options.hideGui);
+    }
+
     private void renderCondition() {
         if (selectedComponent == null) return;
-        Player player = GuiOpenWrapper.MINECRAFT.get().player;
-        IPlayerHealthCapability healthData = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
+        if (healthData == null) return;
 
         for (HealthConditionWidget widget : this.conditionWidgets.values()){
             widget.visible = false;
@@ -120,11 +130,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2;
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2;
 
-        drawPanelBackground(guiGraphics, panelX, panelY);
-    }
-
-    private static void drawPanelBackground(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(HUD_BACKGROUND, x, y, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        guiGraphics.blit(HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
     }
 
     @Override
@@ -136,9 +142,8 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     public void onClose() {
         GuiOpenWrapper.MINECRAFT.get().setScreen(null);
 
+        setHealthData(null);
         HealingHandler.setHealthScreen(null);
-        HealthScreen.targetPlayer = null;
-
         super.onClose();
     }
 
@@ -148,18 +153,22 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        super.containerTick();
-    }
-
-    private boolean check() {
-        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
-        // 跳过：菜单界面、无玩家、隐藏GUI（按F1)
-        return !(mc.level == null || mc.player == null || mc.options.hideGui);
+        PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
+                this.menu.targetPlayer, null
+        ));
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean result = super.mouseClicked(mouseX, mouseY, button);
         return result;
+    }
+
+    public static IPlayerHealthCapability getHealthData() {
+        return HealthScreen.healthData;
+    }
+
+    public static void setHealthData(IPlayerHealthCapability healthData) {
+        HealthScreen.healthData = healthData;
     }
 }

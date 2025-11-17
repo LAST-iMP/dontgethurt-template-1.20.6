@@ -2,23 +2,26 @@ package com.lastimp.dgh.client.gui;
 
 import com.lastimp.dgh.common.Register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.UUID;
 
 public class HealthMenu extends AbstractContainerMenu {
+    public final UUID targetPlayer;
+
     public HealthMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
-        this(pContainerId, inv, null, null);
+        this(pContainerId, inv, buf.readUUID());
     }
 
-    public HealthMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+    public HealthMenu(int pContainerId, Inventory inv, UUID targetPlayer) {
         super(ModMenus.HEALTH_MENU.get(), pContainerId);
-        // 检查slot的多少
-        checkContainerSize(inv,1);
+        this.targetPlayer = targetPlayer;
         layoutPlayerInventorySlots(inv);
     }
 

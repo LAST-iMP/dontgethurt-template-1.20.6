@@ -25,7 +25,7 @@ public class BloodScanner extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (level.isClientSide && usedHand == InteractionHand.MAIN_HAND && !this.used)
+        if (!level.isClientSide && usedHand == InteractionHand.MAIN_HAND && !this.used)
             this.scanEntity(player, player);
         this.used = false;
         return super.use(level, player, usedHand);
@@ -33,7 +33,7 @@ public class BloodScanner extends Item {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if (player.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
+        if (!player.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
             this.scanEntity(player, target);
             this.used = true;
         }
@@ -57,7 +57,7 @@ public class BloodScanner extends Item {
                 }
             }
             if (!hasAbnormal) {
-                entity.sendSystemMessage(Component.literal(player.getName() + "的血液状态正常"));
+                entity.sendSystemMessage(Component.literal(player.getScoreboardName() + "的血液状态正常"));
             }
         }
     }

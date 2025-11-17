@@ -8,6 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashMap;
 
+import static com.lastimp.dgh.common.core.Enums.BodyComponents.*;
+
 public class PlayerHealthCapability implements IPlayerHealthCapability {
 
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
@@ -15,13 +17,13 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
     private boolean onBed;
 
     public PlayerHealthCapability() {
-        components.put(BodyComponents.LEFT_ARM, new Extremities());
-        components.put(BodyComponents.RIGHT_ARM, new Extremities());
-        components.put(BodyComponents.LEFT_LEG, new Extremities());
-        components.put(BodyComponents.RIGHT_LEG, new Extremities());
-        components.put(BodyComponents.HEAD, new Head());
-        components.put(BodyComponents.TORSO, new Torso());
-        components.put(BodyComponents.BLOOD, new PlayerBlood());
+        components.put(LEFT_ARM, new Extremities());
+        components.put(RIGHT_ARM, new Extremities());
+        components.put(LEFT_LEG, new Extremities());
+        components.put(RIGHT_LEG, new Extremities());
+        components.put(HEAD, new Head());
+        components.put(TORSO, new Torso());
+        components.put(BLOOD, new PlayerBlood());
     }
 
     @Override
@@ -55,7 +57,7 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         for (BodyComponents comp : BodyComponents.values()) {
-            tag.put(comp.name().toLowerCase(), components.get(comp).serializeNBT(provider));
+            tag.put(comp.name(), components.get(comp).serializeNBT(provider));
         }
         tag.putBoolean("onBed", onBed);
         return tag;
@@ -64,15 +66,14 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         if (nbt == null) return;
-        for (BodyComponents comp : BodyComponents.values()) {
-            if (nbt.contains(comp.name().toLowerCase())) {
-                Extremities extremity = new Extremities();
-                extremity.deserializeNBT(provider, nbt.getCompound(comp.name().toLowerCase()));
-                components.put(comp, extremity);
-            } else {
-                components.put(comp, new Extremities());
-            }
-        }
+        components.put(LEFT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_ARM.name()), Extremities::new));
+        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_ARM.name()), Extremities::new));
+        components.put(LEFT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_LEG.name()), Extremities::new));
+        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_LEG.name()), Extremities::new));
+        components.put(HEAD, AbstractBody.buildFromNBT(provider, nbt.getCompound(HEAD.name()), Head::new));
+        components.put(TORSO, AbstractBody.buildFromNBT(provider, nbt.getCompound(TORSO.name()), Torso::new));
+        components.put(BLOOD, AbstractBody.buildFromNBT(provider, nbt.getCompound(BLOOD.name()), PlayerBlood::new));
+
         onBed = nbt.getBoolean("onBed");
     }
 }

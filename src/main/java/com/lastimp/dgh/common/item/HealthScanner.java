@@ -1,26 +1,17 @@
 package com.lastimp.dgh.common.item;
 
-import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.client.gui.HealthMenu;
-import com.lastimp.dgh.client.gui.HealthScreen;
-import com.lastimp.dgh.common.core.HealingSystem.HealingHandler;
-import net.minecraft.network.chat.Component;
+import com.lastimp.dgh.client.gui.MenuProvider.HealthMenuProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-//@EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
-public class HealthScanner extends Item implements MenuProvider {
+public class HealthScanner extends Item {
     private boolean used = false;
 
     public HealthScanner(Properties properties) {
@@ -29,9 +20,8 @@ public class HealthScanner extends Item implements MenuProvider {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (!level.isClientSide) {
-            HealthScreen.targetPlayer = player;
-            player.openMenu(this);
+        if (!level.isClientSide && !this.used) {
+            player.openMenu(new HealthMenuProvider(player.getUUID()), buf -> buf.writeUUID(player.getUUID()));
         }
         this.used = false;
         return super.use(level, player, usedHand);
@@ -39,21 +29,15 @@ public class HealthScanner extends Item implements MenuProvider {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
+        if (!(target instanceof Player)) {
+            return InteractionResult.PASS;
+        }
+
         if (!player.level().isClientSide) {
-            player.openMenu(this);
             this.used = true;
+            player.openMenu(new HealthMenuProvider(target.getUUID()), buf -> buf.writeUUID(target.getUUID()));
         }
         return InteractionResult.PASS;
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("gui." + DontGetHurt.MODID + ".health_menu");
-    }
-
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new HealthMenu(i, inventory, null, null);
     }
 
 

@@ -1,0 +1,48 @@
+package com.lastimp.dgh.network.DataPack;
+
+import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.client.player.IPlayerHealthCapability;
+import com.lastimp.dgh.client.player.PlayerHealthCapability;
+import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.UUID;
+
+public record MyReadAllConditionData(long id_most, long id_least, CompoundTag tag) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<MyReadAllConditionData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_read_all_condition"));
+
+    public static final StreamCodec<ByteBuf, MyReadAllConditionData> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_LONG,
+            MyReadAllConditionData::id_most,
+            ByteBufCodecs.VAR_LONG,
+            MyReadAllConditionData::id_least,
+            ByteBufCodecs.COMPOUND_TAG,
+            MyReadAllConditionData::tag,
+            MyReadAllConditionData::new
+    );
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static MyReadAllConditionData getInstance(UUID uuid, IPlayerHealthCapability health) {
+        return new MyReadAllConditionData(
+                uuid.getMostSignificantBits(),
+                uuid.getLeastSignificantBits(),
+                health == null? new CompoundTag() : health.serializeNBT(null)
+        );
+    }
+
+    public static IPlayerHealthCapability getFromInstance(CompoundTag tag) {
+        PlayerHealthCapability health = new PlayerHealthCapability();
+        health.deserializeNBT(null, tag);
+        return health;
+    }
+}

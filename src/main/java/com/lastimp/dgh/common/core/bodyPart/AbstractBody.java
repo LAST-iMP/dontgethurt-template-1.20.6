@@ -9,6 +9,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public abstract class AbstractBody implements IAbstractBody {
 
@@ -63,5 +64,11 @@ public abstract class AbstractBody implements IAbstractBody {
                 state.put(condition, condition.defaultValue);
             }
         }
+    }
+
+    public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Function<Void, T> constructor) {
+        T body = constructor.apply(null);
+        body.deserializeNBT(provider, nbt);
+        return body;
     }
 }

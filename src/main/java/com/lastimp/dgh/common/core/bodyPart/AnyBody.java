@@ -1,8 +1,12 @@
 package com.lastimp.dgh.common.core.bodyPart;
 
 import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class AnyBody extends AbstractBody {
     private static List<BodyCondition> ANY_BODY_CONDITIONS;
