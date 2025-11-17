@@ -1,12 +1,16 @@
 package com.lastimp.dgh.client.player;
 
+import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.common.Register.ModCapabilities;
 import com.lastimp.dgh.common.core.Enums.BodyComponents;
 import com.lastimp.dgh.common.core.Enums.BodyCondition;
 import com.lastimp.dgh.common.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
+import java.util.function.Function;
 
 import static com.lastimp.dgh.common.core.Enums.BodyComponents.*;
 
@@ -15,6 +19,21 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
 
     private boolean onBed;
+
+    public static IPlayerHealthCapability get(Player player) {
+        return player.getData(ModCapabilities.PLAYER_HEALTH);
+    }
+
+    public static void set(Player player, PlayerHealthCapability capability) {
+        player.setData(ModCapabilities.PLAYER_HEALTH, capability);
+    }
+
+    public static <T> T getAndSet(Player player, Function<PlayerHealthCapability, T> function) {
+        PlayerHealthCapability health = (PlayerHealthCapability) PlayerHealthCapability.get(player);
+        T result = function.apply(health);
+        PlayerHealthCapability.set(player, health);
+        return result;
+    }
 
     public PlayerHealthCapability() {
         components.put(LEFT_ARM, new Extremities());

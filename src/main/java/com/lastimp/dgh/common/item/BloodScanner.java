@@ -1,10 +1,13 @@
 package com.lastimp.dgh.common.item;
 
+import com.lastimp.dgh.client.player.PlayerHealthCapability;
 import com.lastimp.dgh.common.Register.ModCapabilities;
 import com.lastimp.dgh.common.core.Enums.BodyComponents;
 import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.common.core.Enums.OperationType;
 import com.lastimp.dgh.common.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
+import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public class BloodScanner extends Item {
@@ -26,7 +30,7 @@ public class BloodScanner extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (!level.isClientSide && usedHand == InteractionHand.MAIN_HAND && !this.used)
-            this.scanEntity(player, player);
+            BloodScanner.scanHealth(player, PlayerHealthCapability.get(player), player.getScoreboardName());
         this.used = false;
         return super.use(level, player, usedHand);
     }
@@ -41,24 +45,29 @@ public class BloodScanner extends Item {
     }
 
     private void scanEntity(Player player, LivingEntity entity) {
-        if (!(entity instanceof Player)) {
-            player.sendSystemMessage(Component.literal("它的血液很正常"));
+        if (!(entity instanceof Player target)) {
+            player.sendSystemMessage(Component.literal(entity.getName().getString() + "的血液很正常"));
         } else {
-            IPlayerHealthCapability playerHealth = entity.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
-            PlayerBlood blood = (PlayerBlood) playerHealth.getComponent(BodyComponents.BLOOD);
-            boolean hasAbnormal = false;
-            for (BodyCondition condition : BodyCondition.bloodScannerConditions()) {
-                float value = blood.getCondition(condition);
-                if (condition.abnormal(value)) {
-                    hasAbnormal = true;
-                    entity.sendSystemMessage(
-                            Component.literal(condition + ": " + String.format("%.2f", value))
-                    );
-                }
+            PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
+                    target.getUUID(), null, OperationType.BLOOD_SCANN
+            ));
+        }
+    }
+
+    public static void scanHealth(Player player, IPlayerHealthCapability health, String name) {
+        PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
+        boolean hasAbnormal = false;
+        for (BodyCondition condition : BodyCondition.bloodScannerConditions()) {
+            float value = blood.getCondition(condition);
+            if (condition.abnormal(value)) {
+                hasAbnormal = true;
+                player.sendSystemMessage(
+                        Component.literal(condition + ": " + String.format("%.2f", value))
+                );
             }
-            if (!hasAbnormal) {
-                entity.sendSystemMessage(Component.literal(player.getScoreboardName() + "的血液状态正常"));
-            }
+        }
+        if (!hasAbnormal) {
+            player.sendSystemMessage(Component.literal(name + "的血液状态正常"));
         }
     }
 }

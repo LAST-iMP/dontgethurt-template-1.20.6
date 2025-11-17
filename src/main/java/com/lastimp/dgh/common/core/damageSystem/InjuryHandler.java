@@ -2,6 +2,7 @@ package com.lastimp.dgh.common.core.damageSystem;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
+import com.lastimp.dgh.client.player.PlayerHealthCapability;
 import com.lastimp.dgh.common.Register.ModCapabilities;
 import com.lastimp.dgh.common.core.bodyPart.AbstractBody;
 import com.lastimp.dgh.common.core.Enums.BodyComponents;
@@ -14,6 +15,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import oshi.util.tuples.Pair;
 
 import static com.lastimp.dgh.common.core.Enums.BodyComponents.LEFT_LEG;
 import static com.lastimp.dgh.common.core.Enums.BodyComponents.RIGHT_LEG;
@@ -48,13 +50,14 @@ public class InjuryHandler {
     }
 
     public static void handleFalling(float damageAmount, Player player, LivingHurtEvent event) {
-        IPlayerHealthCapability health = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
+        IPlayerHealthCapability health = PlayerHealthCapability.getAndSet(player, h -> {
+            AbstractBody leftFeet = (AbstractBody) h.getComponent(LEFT_LEG);
+            AbstractBody rightFeet = (AbstractBody) h.getComponent(RIGHT_LEG);
 
-        AbstractBody leftFeet = (AbstractBody) health.getComponent(LEFT_LEG);
-        AbstractBody rightFeet = (AbstractBody) health.getComponent(RIGHT_LEG);
-
-        leftFeet.addCondition(INTERNAL_INJURY, damageAmount * 0.5f / INTERNAL_INJURY.factor);
-        rightFeet.addCondition(INTERNAL_INJURY, damageAmount * 0.5f / INTERNAL_INJURY.factor);
+            leftFeet.addCondition(INTERNAL_INJURY, damageAmount * 0.5f / INTERNAL_INJURY.factor);
+            rightFeet.addCondition(INTERNAL_INJURY, damageAmount * 0.5f / INTERNAL_INJURY.factor);
+            return h;
+        });
 
         PacketDistributor.sendToPlayer((ServerPlayer) player,
                 MySynBodyConditionData.getInstance(health, LEFT_LEG, INTERNAL_INJURY),
@@ -64,15 +67,16 @@ public class InjuryHandler {
     }
 
     public static void handleBurning(float damageAmount, Player player, LivingHurtEvent event) {
-        IPlayerHealthCapability health = player.getCapability(ModCapabilities.PLAYER_HEALTH_HANDLER);
+        Pair<IPlayerHealthCapability, BodyComponents> result = PlayerHealthCapability.getAndSet(player, h -> {
+            BodyComponents randomComponent = BodyComponents.random();
+            AbstractBody body = (AbstractBody) h.getComponent(randomComponent);
 
-        BodyComponents randomComponent = BodyComponents.random();
-        AbstractBody body = (AbstractBody) health.getComponent(randomComponent);
-
-        body.addCondition(BURN, damageAmount / BURN.factor);
+            body.addCondition(BURN, damageAmount / BURN.factor);
+            return new Pair<>(h, randomComponent);
+        });
 
         PacketDistributor.sendToPlayer((ServerPlayer) player,
-                MySynBodyConditionData.getInstance(health, randomComponent, BURN)
+                MySynBodyConditionData.getInstance(result.getA(), result.getB(), BURN)
         );
         event.setAmount(0f);
     }

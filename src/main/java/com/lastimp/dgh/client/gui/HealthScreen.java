@@ -2,13 +2,12 @@ package com.lastimp.dgh.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.client.player.PlayerHealthProvider;
-import com.lastimp.dgh.common.Register.ModCapabilities;
+import com.lastimp.dgh.common.core.Enums.OperationType;
 import com.lastimp.dgh.common.core.HealingSystem.HealingHandler;
 import com.lastimp.dgh.common.core.bodyPart.AbstractBody;
 import com.lastimp.dgh.common.core.Enums.BodyComponents;
 import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,13 +15,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
@@ -38,6 +35,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         HealingHandler.setHealthScreen(this);
+        ClientPayloadHandler.setHealthScreen(this);
     }
 
     @Override
@@ -144,6 +142,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
         setHealthData(null);
         HealingHandler.setHealthScreen(null);
+        ClientPayloadHandler.setHealthScreen(null);
         super.onClose();
     }
 
@@ -154,7 +153,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     @Override
     protected void containerTick() {
         PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                this.menu.targetPlayer, null
+                this.menu.targetPlayer, null, OperationType.HEALTH_SCANN
         ));
     }
 
@@ -164,11 +163,15 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         return result;
     }
 
-    public static IPlayerHealthCapability getHealthData() {
-        return HealthScreen.healthData;
+    public void setHealthData(IPlayerHealthCapability healthData) {
+        HealthScreen.healthData = healthData;
     }
 
-    public static void setHealthData(IPlayerHealthCapability healthData) {
-        HealthScreen.healthData = healthData;
+    public static IPlayerHealthCapability getHealthData() {
+        return healthData;
+    }
+
+    public BodyComponents getSelectedComponent() {
+        return selectedComponent;
     }
 }

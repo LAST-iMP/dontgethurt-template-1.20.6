@@ -1,6 +1,7 @@
 package com.lastimp.dgh.common.item;
 
 import com.lastimp.dgh.client.gui.MenuProvider.HealthMenuProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;

@@ -3,8 +3,7 @@ package com.lastimp.dgh.network.DataPack;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.client.player.IPlayerHealthCapability;
 import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.common.core.Enums.OperationType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -14,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 
-public record MyReadAllConditionData(long id_most, long id_least, CompoundTag tag) implements CustomPacketPayload {
+public record MyReadAllConditionData(long id_most, long id_least, CompoundTag tag, String oper) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<MyReadAllConditionData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_read_all_condition"));
 
     public static final StreamCodec<ByteBuf, MyReadAllConditionData> STREAM_CODEC = StreamCodec.composite(
@@ -24,6 +23,8 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
             MyReadAllConditionData::id_least,
             ByteBufCodecs.COMPOUND_TAG,
             MyReadAllConditionData::tag,
+            ByteBufCodecs.STRING_UTF8,
+            MyReadAllConditionData::oper,
             MyReadAllConditionData::new
     );
 
@@ -32,15 +33,16 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
         return TYPE;
     }
 
-    public static MyReadAllConditionData getInstance(UUID uuid, IPlayerHealthCapability health) {
+    public static MyReadAllConditionData getInstance(UUID uuid, IPlayerHealthCapability health, OperationType operation) {
         return new MyReadAllConditionData(
                 uuid.getMostSignificantBits(),
                 uuid.getLeastSignificantBits(),
-                health == null? new CompoundTag() : health.serializeNBT(null)
+                health == null? new CompoundTag() : health.serializeNBT(null),
+                operation.toString()
         );
     }
 
-    public static IPlayerHealthCapability getFromInstance(CompoundTag tag) {
+    public static IPlayerHealthCapability getHealthFromInstance(CompoundTag tag) {
         PlayerHealthCapability health = new PlayerHealthCapability();
         health.deserializeNBT(null, tag);
         return health;

@@ -12,8 +12,7 @@ public class Bandages extends AbstractPartlyHealItem {
 
     @Override
     protected void init() {
-        this.healingAbilities.add(HealingAbility.of(BURN, 0.2f, 1.0f, 1.0f));
-        this.healingAbilities.add(HealingAbility.of(BLEED, 0.2f, 1.0f, 1.0f));
-        this.healingAbilities.add(HealingAbility.of(OPEN_WOUND, 0.2f, 1.0f, 1.0f));
+        this.healingAbilities.add(HealingAbility.of(BANDAGED, -1.0f, 1.0f, 1.0f));
+
     }
 }
