@@ -1,22 +1,22 @@
 package com.lastimp.dgh.common.Register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.client.player.PlayerHealthProvider;
+import com.lastimp.dgh.api.tags.DamageTag;
+import com.lastimp.dgh.common.core.player.PlayerHealthProvider;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
-import com.lastimp.dgh.network.DataPack.MySelectBodyData;
 import com.lastimp.dgh.network.DataPack.MySynBodyConditionData;
 import com.lastimp.dgh.network.ServerPayloadHandler;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModEventBus {
@@ -33,14 +33,6 @@ public class ModEventBus {
     @SubscribeEvent
     public static void registerNetwork(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(DontGetHurt.MODID);
-        registrar.playBidirectional(
-                MySelectBodyData.TYPE,
-                MySelectBodyData.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        ClientPayloadHandler::handleSelectBodyData,
-                        ServerPayloadHandler::handleSelectBodyData
-                )
-        );
         registrar.playBidirectional(
                 MySynBodyConditionData.TYPE,
                 MySynBodyConditionData.STREAM_CODEC,
@@ -64,4 +56,12 @@ public class ModEventBus {
         );
     }
 
+    @SubscribeEvent
+    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(
+                DamageTag.BLUNT_TRAUMA_DAMAGE,
+                DamageType.DIRECT_CODEC,
+                DamageType.DIRECT_CODEC
+        );
+    }
 }

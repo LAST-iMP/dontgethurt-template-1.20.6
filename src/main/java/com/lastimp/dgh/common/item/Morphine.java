@@ -1,16 +1,9 @@
 package com.lastimp.dgh.common.item;
 
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.HealingSystem.AbstractDirectHealItems;
-import com.lastimp.dgh.common.core.HealingSystem.HealingEffect;
-import com.lastimp.dgh.common.core.bodyPart.IAbstractBody;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
-
-import static com.lastimp.dgh.common.core.Enums.BodyCondition.*;
 
 public class Morphine extends AbstractDirectHealItems {
 

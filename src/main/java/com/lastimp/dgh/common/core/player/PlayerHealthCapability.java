@@ -1,18 +1,20 @@
-package com.lastimp.dgh.client.player;
+package com.lastimp.dgh.common.core.player;
 
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.common.Register.ModCapabilities;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.common.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
 
-public class PlayerHealthCapability implements IPlayerHealthCapability {
+public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
 
-    public static IPlayerHealthCapability get(Player player) {
+    public static PlayerHealthCapability get(Player player) {
         return player.getData(ModCapabilities.PLAYER_HEALTH);
     }
 
@@ -27,9 +29,12 @@ public class PlayerHealthCapability implements IPlayerHealthCapability {
         return result;
     }
 
-    @Override
-    public IAbstractBody getComponent(BodyComponents component) {
+    public AbstractBody getComponent(BodyComponents component) {
         return this.body.getComponent(component);
+    }
+
+    public PlayerHealthCapability update(PlayerHealthCapability nextTickHealth) {
+        return WholeBody.update(this, nextTickHealth);
     }
 
     @Override

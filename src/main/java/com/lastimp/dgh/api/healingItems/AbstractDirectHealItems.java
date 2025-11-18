@@ -1,4 +1,4 @@
-package com.lastimp.dgh.common.core.HealingSystem;
+package com.lastimp.dgh.api.healingItems;
 
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;

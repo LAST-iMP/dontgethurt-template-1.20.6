@@ -1,54 +1,43 @@
 package com.lastimp.dgh.common.core.bodyPart;
 
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.*;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.BLOOD;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.HEAD;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.LEFT_ARM;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.LEFT_LEG;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.RIGHT_ARM;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.RIGHT_LEG;
-import static com.lastimp.dgh.common.core.Enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.common.core.bodyPart.Extremities.*;
-import static com.lastimp.dgh.common.core.bodyPart.Extremities.updateLeftLeg;
-import static com.lastimp.dgh.common.core.bodyPart.Head.updateHead;
-import static com.lastimp.dgh.common.core.bodyPart.PlayerBlood.updateBlood;
-import static com.lastimp.dgh.common.core.bodyPart.Torso.updateTorso;
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
-public class WholeBody extends AbstractBody{
+public class WholeBody extends AbstractBody {
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
     private static List<BodyCondition> WHOLE_BODY_CONDITIONS;
 
     public static PlayerHealthCapability update(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth) {
-        health = updateRightArm(health, nextTickHealth);
-        health = updateLeftArm(health, nextTickHealth);
-        health = updateRightLeg(health, nextTickHealth);
-        health = updateLeftLeg(health, nextTickHealth);
-        health = updateTorso(health, nextTickHealth);
-        health = updateBlood(health, nextTickHealth);
-        health = updateHead(health, nextTickHealth);
+        health = RightArm.updateRightArm(health, nextTickHealth);
+        health = LeftArm.updateLeftArm(health, nextTickHealth);
+        health = RightLeg.updateRightLeg(health, nextTickHealth);
+        health = LeftLeg.updateLeftLeg(health, nextTickHealth);
+        health = Torso.updateTorso(health, nextTickHealth);
+        health = PlayerBlood.updateBlood(health, nextTickHealth);
+        health = Head.updateHead(health, nextTickHealth);
         return health;
     }
 
     public WholeBody() {
-        components.put(LEFT_ARM, new Extremities());
-        components.put(RIGHT_ARM, new Extremities());
-        components.put(LEFT_LEG, new Extremities());
-        components.put(RIGHT_LEG, new Extremities());
+        components.put(LEFT_ARM, new LeftArm());
+        components.put(RIGHT_ARM, new RightArm());
+        components.put(LEFT_LEG, new LeftLeg());
+        components.put(RIGHT_LEG, new RightLeg());
         components.put(HEAD, new Head());
         components.put(TORSO, new Torso());
         components.put(BLOOD, new PlayerBlood());
     }
 
-    public IAbstractBody getComponent(BodyComponents component) {
+    public AbstractBody getComponent(BodyComponents component) {
         return component == WHOLE_BODY ? this : components.get(component);
     }
 
@@ -74,10 +63,10 @@ public class WholeBody extends AbstractBody{
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         if (nbt == null) return;
-        components.put(LEFT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_ARM.name()), Extremities::new));
-        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_ARM.name()), Extremities::new));
-        components.put(LEFT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_LEG.name()), Extremities::new));
-        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_LEG.name()), Extremities::new));
+        components.put(LEFT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_ARM.name()), LeftArm::new));
+        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_ARM.name()), RightArm::new));
+        components.put(LEFT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_LEG.name()), LeftLeg::new));
+        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_LEG.name()), RightLeg::new));
         components.put(HEAD, AbstractBody.buildFromNBT(provider, nbt.getCompound(HEAD.name()), Head::new));
         components.put(TORSO, AbstractBody.buildFromNBT(provider, nbt.getCompound(TORSO.name()), Torso::new));
         components.put(BLOOD, AbstractBody.buildFromNBT(provider, nbt.getCompound(BLOOD.name()), PlayerBlood::new));

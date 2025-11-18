@@ -1,17 +1,13 @@
 package com.lastimp.dgh.common.item;
 
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.HealingSystem.AbstractDirectHealItems;
-import com.lastimp.dgh.common.core.HealingSystem.HealingEffect;
-import com.lastimp.dgh.common.core.bodyPart.IAbstractBody;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.common.core.bodyPart.PlayerBlood;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-
-import static com.lastimp.dgh.common.core.Enums.BodyCondition.*;
+import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class BloodPacks extends AbstractDirectHealItems {
 
@@ -23,10 +19,10 @@ public class BloodPacks extends AbstractDirectHealItems {
     public boolean heal(@NotNull ServerPlayer player) {
         return PlayerHealthCapability.getAndSet(player, health -> {
             PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
-            float currCondition = blood.getCondition(BLOOD_VOLUME);
+            float currCondition = blood.getConditionValue(BLOOD_VOLUME);
             if (currCondition >= 2.0f) return false;
 
-            blood.addCondition(BLOOD_VOLUME, 0.25f);
+            blood.addConditionValue(BLOOD_VOLUME, 0.25f);
             return true;
         });
     }

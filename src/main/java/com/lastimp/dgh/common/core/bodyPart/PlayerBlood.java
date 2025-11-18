@@ -1,11 +1,12 @@
 package com.lastimp.dgh.common.core.bodyPart;
 
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.api.enums.BodyCondition;
 
 import java.util.List;
 
-import static com.lastimp.dgh.common.core.Enums.BodyCondition.*;
+import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class PlayerBlood extends AbstractBody {
     private static List<BodyCondition> BLOOD_CONDITIONS;
@@ -24,7 +25,7 @@ public class PlayerBlood extends AbstractBody {
             BLOOD_CONDITIONS = List.of(new BodyCondition[]{
                     BLOOD_VOLUME,
                     SEPSIS,
-                    HEMOTRANSFUSION_SHOCK,
+                    HEMOTRANSFUSION,
                     BLOOD_LOSS,
                     BLOOD_PRESSURE,
                     PH_LEVEL,

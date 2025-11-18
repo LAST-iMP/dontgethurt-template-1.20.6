@@ -1,15 +1,13 @@
 package com.lastimp.dgh.network;
 
-import com.lastimp.dgh.client.player.IPlayerHealthCapability;
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.OperationType;
-import com.lastimp.dgh.common.core.HealingSystem.HealingHandler;
-import com.lastimp.dgh.common.core.bodyPart.AbstractBody;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.common.core.healingSystem.HealingHandler;
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
-import com.lastimp.dgh.network.DataPack.MySelectBodyData;
 import com.lastimp.dgh.network.DataPack.MySynBodyConditionData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,22 +20,12 @@ import java.util.UUID;
 
 public class ServerPayloadHandler {
 
-    public static void handleSelectBodyData(final MySelectBodyData data, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-//                    blah(data.selectBodyPart());
-                })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
-                });
-    }
-
     public static void handleSynBodyConditionData(final MySynBodyConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
                     Player player = context.player();
-                    IPlayerHealthCapability health = PlayerHealthCapability.get(player);
-                    AbstractBody body = (AbstractBody) health.getComponent(BodyComponents.valueOf(data.component()));
-                    body.setCondition(BodyCondition.valueOf(data.condition()), data.value());
+                    PlayerHealthCapability health = PlayerHealthCapability.get(player);
+                    AbstractBody body = health.getComponent(BodyComponents.valueOf(data.component()));
+                    body.setConditionValue(BodyCondition.valueOf(data.condition()), data.value());
                 })
                 .exceptionally(e -> {
                     context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
@@ -49,7 +37,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
                     UUID uuid = new UUID(data.id_most(), data.id_least());
                     ServerPlayer targetPlayer = (ServerPlayer) context.player().level().getPlayerByUUID(uuid);
-                    IPlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
+                    PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
 
                     PacketDistributor.sendToPlayer(
                             (ServerPlayer) context.player(),

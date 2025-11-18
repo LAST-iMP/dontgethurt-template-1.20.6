@@ -1,9 +1,8 @@
 package com.lastimp.dgh.network.DataPack;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.client.player.IPlayerHealthCapability;
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.OperationType;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.api.enums.OperationType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +33,7 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
         return TYPE;
     }
 
-    public static MyReadAllConditionData getInstance(UUID uuid, IPlayerHealthCapability health, OperationType operation, HolderLookup.Provider provider) {
+    public static MyReadAllConditionData getInstance(UUID uuid, PlayerHealthCapability health, OperationType operation, HolderLookup.Provider provider) {
         return new MyReadAllConditionData(
                 uuid.getMostSignificantBits(),
                 uuid.getLeastSignificantBits(),
@@ -43,7 +42,7 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
         );
     }
 
-    public static IPlayerHealthCapability getHealthFromInstance(CompoundTag tag, HolderLookup.Provider provider) {
+    public static PlayerHealthCapability getHealthFromInstance(CompoundTag tag, HolderLookup.Provider provider) {
         PlayerHealthCapability health = new PlayerHealthCapability();
         health.deserializeNBT(provider, tag);
         return health;

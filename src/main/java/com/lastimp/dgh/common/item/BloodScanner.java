@@ -1,12 +1,10 @@
 package com.lastimp.dgh.common.item;
 
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
-import com.lastimp.dgh.common.Register.ModCapabilities;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
-import com.lastimp.dgh.common.core.Enums.OperationType;
+import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.common.core.bodyPart.PlayerBlood;
-import com.lastimp.dgh.client.player.IPlayerHealthCapability;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -21,11 +19,32 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+import static com.lastimp.dgh.api.enums.BodyCondition.*;
+
 public class BloodScanner extends Item {
+    private static List<BodyCondition> BLOOD_SCANNER_CONDITIONS;
+
     private boolean used = false;
 
     public BloodScanner(Properties properties) {
         super(properties);
+    }
+
+    public static List<BodyCondition> bloodScannerConditions() {
+        if (BLOOD_SCANNER_CONDITIONS == null) {
+            BLOOD_SCANNER_CONDITIONS = List.of(new BodyCondition[]{
+                    BLOOD_VOLUME,
+                    SEPSIS,
+                    HEMOTRANSFUSION,
+                    BLOOD_LOSS,
+                    BLOOD_PRESSURE,
+                    PH_LEVEL,
+                    IMMUNITY
+            });
+        }
+        return BLOOD_SCANNER_CONDITIONS;
     }
 
     @Override
@@ -55,11 +74,11 @@ public class BloodScanner extends Item {
         }
     }
 
-    public static void scanHealth(Player player, IPlayerHealthCapability health, String name) {
+    public static void scanHealth(Player player, PlayerHealthCapability health, String name) {
         PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
-        for (BodyCondition condition : BodyCondition.bloodScannerConditions()) {
-            float value = blood.getCondition(condition);
+        for (BodyCondition condition : BloodScanner.bloodScannerConditions()) {
+            float value = blood.getConditionValue(condition);
             if (condition.abnormal(value)) {
                 hasAbnormal = true;
                 player.sendSystemMessage(

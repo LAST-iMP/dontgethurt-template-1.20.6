@@ -1,12 +1,14 @@
-package com.lastimp.dgh.common.core.HealingSystem;
+package com.lastimp.dgh.common.core.healingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
+import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
+import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.client.gui.HealthScreen;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -57,7 +59,7 @@ public class HealingHandler {
     }
 
     public static HealthScreen getHealthScreen() {
-        return healthScreen;
+        return HealingHandler.healthScreen;
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {

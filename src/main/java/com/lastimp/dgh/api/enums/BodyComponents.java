@@ -1,4 +1,4 @@
-package com.lastimp.dgh.common.core.Enums;
+package com.lastimp.dgh.api.enums;
 
 
 import net.minecraft.network.chat.Component;

@@ -1,12 +1,5 @@
 {
   "itemGroup.dgh": "dgh",
-  "dgh.configuration.title": "Example Mod Configs",
-  "dgh.configuration.section.examplemod.common.toml": "Example Mod Configs",
-  "dgh.configuration.section.examplemod.common.toml.title": "Example Mod Configs",
-  "dgh.configuration.items": "Item List",
-  "dgh.configuration.logDirtBlock": "Log Dirt Block",
-  "dgh.configuration.magicNumberIntroduction": "Magic Number Text",
-  "dgh.configuration.magicNumber": "Magic Number",
 
 
   "BURN": "BURN",
@@ -21,7 +14,7 @@
 
   "BLOOD_VOLUME": "BLOOD_VOLUME",
   "SEPSIS": "SEPSIS",
-  "HEMOTRANSFUSION_SHOCK": "HEMOTRANSFUSION_SHOCK",
+  "HEMOTRANSFUSION": "HEMOTRANSFUSION_SHOCK",
   "BLOOD_LOSS": "BLOOD_LOSS",
   "BLOOD_PRESSURE": "BLOOD_PRESSURE",
   "PH_LEVEL": "PH_LEVEL",

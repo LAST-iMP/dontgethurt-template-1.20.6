@@ -1,12 +1,12 @@
 package com.lastimp.dgh.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.client.player.IPlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.OperationType;
-import com.lastimp.dgh.common.core.HealingSystem.HealingHandler;
-import com.lastimp.dgh.common.core.bodyPart.AbstractBody;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.common.core.healingSystem.HealingHandler;
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.common.item.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.lastimp.dgh.common.core.Enums.OperationType.HEALTH_SCANN;
+import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
@@ -32,7 +32,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private final List<HealthComponentWidget> componentWidgets = new ArrayList<>();
     private final HashMap<BodyCondition, HealthConditionWidget> conditionWidgets = new HashMap<>();
     private BodyComponents selectedComponent = null;
-    private static IPlayerHealthCapability healthData = null;
+    private static PlayerHealthCapability healthData = null;
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -56,7 +56,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         this.addHealthWidget(52, 80, 11, 43, BodyComponents.RIGHT_LEG);
 
         conditionWidgets.clear();
-        for (BodyCondition condition : BodyCondition.healthScannerConditions()) {
+        for (BodyCondition condition : HealthScanner.healthScannerConditions()) {
             addConditionWidget(condition);
         }
     }
@@ -111,15 +111,15 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         List<BodyCondition> conditions = bodyPart.getBodyConditions();
         for (BodyCondition condition : conditions) {
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
-            if (!BodyCondition.healthScannerConditions().contains(condition)) continue;
-            if (!condition.abnormal(bodyPart.getCondition(condition))) continue;
+            if (!HealthScanner.healthScannerConditions().contains(condition)) continue;
+            if (!condition.abnormal(bodyPart.getConditionValue(condition))) continue;
             if (widgetCount > 12) break;
 
             widget.setPosition(
                     this.leftPos + 85 + (widgetCount % 2) * 72,
                     this.topPos + 11 + (widgetCount / 2) * 18
             );
-            widget.setSeverity(bodyPart.getCondition(condition));
+            widget.setSeverity(bodyPart.getConditionValue(condition));
             widget.visible = true;
             widgetCount += 1;
         }
@@ -165,11 +165,11 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         return result;
     }
 
-    public void setHealthData(IPlayerHealthCapability healthData) {
+    public void setHealthData(PlayerHealthCapability healthData) {
         HealthScreen.healthData = healthData;
     }
 
-    public static IPlayerHealthCapability getHealthData() {
+    public static PlayerHealthCapability getHealthData() {
         return healthData;
     }
 

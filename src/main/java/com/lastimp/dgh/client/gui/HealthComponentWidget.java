@@ -1,6 +1,6 @@
 package com.lastimp.dgh.client.gui;
 
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

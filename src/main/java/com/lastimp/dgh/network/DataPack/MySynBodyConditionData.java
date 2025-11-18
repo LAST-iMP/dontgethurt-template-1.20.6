@@ -1,9 +1,9 @@
 package com.lastimp.dgh.network.DataPack;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.client.player.IPlayerHealthCapability;
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
-import com.lastimp.dgh.common.core.Enums.BodyCondition;
+import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -28,9 +28,9 @@ public record MySynBodyConditionData(float value, String component, String condi
         return TYPE;
     }
 
-    public static MySynBodyConditionData getInstance(IPlayerHealthCapability health, BodyComponents component, BodyCondition condition) {
+    public static MySynBodyConditionData getInstance(PlayerHealthCapability health, BodyComponents component, BodyCondition condition) {
         return new MySynBodyConditionData(
-                health.getComponent(component).getCondition(condition),
+                health.getComponent(component).getConditionValue(condition),
                 component.name(),
                 condition.name()
         );

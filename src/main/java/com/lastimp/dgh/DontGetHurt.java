@@ -1,6 +1,5 @@
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.client.player.PlayerHealthCapability;
 import com.lastimp.dgh.common.Register.ModCapabilities;
 import com.lastimp.dgh.common.Register.ModCreativeModTabs;
 import com.lastimp.dgh.common.Register.ModItems;
@@ -8,10 +7,7 @@ import com.lastimp.dgh.common.Register.ModMenus;
 import com.lastimp.dgh.client.gui.HealthScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -29,14 +25,13 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
-import java.util.function.Supplier;
-
 @Mod(DontGetHurt.MODID)
 public class DontGetHurt
 {
     public static final String MODID = "dgh";
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final float DELTA = 0.05f;
+    public static final float EPS = 0.0001f;
 
     public DontGetHurt(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);

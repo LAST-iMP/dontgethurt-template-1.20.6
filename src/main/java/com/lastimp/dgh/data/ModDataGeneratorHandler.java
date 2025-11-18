@@ -9,6 +9,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModDataGeneratorHandler {
+
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         ExistingFileHelper efh = event.getExistingFileHelper();

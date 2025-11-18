@@ -12,6 +12,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        this.basicItem(ModItems.HEALTH_SCANNER.get());
+//        this.basicItem(ModItems.HEALTH_SCANNER.get());
     }
 }

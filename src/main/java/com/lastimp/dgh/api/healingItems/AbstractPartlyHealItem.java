@@ -1,6 +1,6 @@
-package com.lastimp.dgh.common.core.HealingSystem;
+package com.lastimp.dgh.api.healingItems;
 
-import com.lastimp.dgh.common.core.Enums.BodyComponents;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
