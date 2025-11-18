@@ -6,7 +6,6 @@ import com.lastimp.dgh.common.core.player.PlayerHealthProvider;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
-import com.lastimp.dgh.network.DataPack.MySynBodyConditionData;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
@@ -33,14 +32,6 @@ public class ModEventBus {
     @SubscribeEvent
     public static void registerNetwork(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(DontGetHurt.MODID);
-        registrar.playBidirectional(
-                MySynBodyConditionData.TYPE,
-                MySynBodyConditionData.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        ClientPayloadHandler::handleSynBodyConditionData,
-                        ServerPayloadHandler::handleSynBodyConditionData
-                )
-        );
         registrar.playBidirectional(
                 MyReadAllConditionData.TYPE,
                 MyReadAllConditionData.STREAM_CODEC,

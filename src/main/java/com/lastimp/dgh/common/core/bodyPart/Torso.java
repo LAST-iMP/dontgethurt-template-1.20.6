@@ -13,8 +13,9 @@ public class Torso extends AbstractAnyBody {
         this();
     }
 
-    public static PlayerHealthCapability updateTorso(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth) {
-        health = updateAnyBody(health, nextTickHealth, BodyComponents.TORSO);
-        return health;
+    @Override
+    public void update(PlayerHealthCapability health) {
+        super.update(health);
     }
+
 }

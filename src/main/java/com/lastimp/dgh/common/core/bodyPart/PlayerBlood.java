@@ -35,7 +35,8 @@ public class PlayerBlood extends AbstractBody {
         return BLOOD_CONDITIONS;
     }
 
-    public static PlayerHealthCapability updateBlood(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth) {
-        return health;
+    @Override
+    public void update(PlayerHealthCapability health) {
+        return;
     }
 }

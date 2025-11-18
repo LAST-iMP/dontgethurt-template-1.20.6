@@ -31,10 +31,12 @@ public class HealthScanner extends Item {
                     BURN,
                     INTERNAL_INJURY,
                     OPEN_WOUND,
+                    BLEED,
                     INFECTION,
                     FOREIGN_OBJECT,
 
                     BANDAGED,
+                    BANDAGED_DIRTY,
                     OINMENTED,
             });
         }

@@ -1,7 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.api.enums.BodyComponents;
 
 public abstract class AbstractExtremities extends AbstractAnyBody {
     public AbstractExtremities() {
@@ -12,8 +11,8 @@ public abstract class AbstractExtremities extends AbstractAnyBody {
         this();
     }
 
-    protected static PlayerHealthCapability updateExtremities(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth, BodyComponents component) {
-        health = updateAnyBody(health, nextTickHealth, component);
-        return health;
+    @Override
+    public void update(PlayerHealthCapability health) {
+        super.update(health);
     }
 }

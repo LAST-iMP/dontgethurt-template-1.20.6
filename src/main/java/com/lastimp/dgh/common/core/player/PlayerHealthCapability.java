@@ -11,6 +11,8 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
 
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
+
 public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
 
@@ -23,7 +25,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static <T> T getAndSet(Player player, Function<PlayerHealthCapability, T> function) {
-        PlayerHealthCapability health = (PlayerHealthCapability) PlayerHealthCapability.get(player);
+        PlayerHealthCapability health = PlayerHealthCapability.get(player);
         T result = function.apply(health);
         PlayerHealthCapability.set(player, health);
         return result;
@@ -33,8 +35,34 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         return this.body.getComponent(component);
     }
 
-    public PlayerHealthCapability update(PlayerHealthCapability nextTickHealth) {
-        return WholeBody.update(this, nextTickHealth);
+    public PlayerHealthCapability update() {
+        this.body.update(this);
+        return this;
+    }
+
+    public AbstractBody[] legs() {
+        return new AbstractBody[] {
+                this.body.getComponent(LEFT_LEG),
+                this.body.getComponent(RIGHT_LEG)
+        };
+    }
+
+    public AbstractBody[] arms() {
+        return new AbstractBody[] {
+                this.body.getComponent(LEFT_ARM),
+                this.body.getComponent(RIGHT_ARM)
+        };
+    }
+
+    public AbstractBody[] visibleParts() {
+        return new AbstractBody[] {
+                this.body.getComponent(HEAD),
+                this.body.getComponent(TORSO),
+                this.body.getComponent(LEFT_ARM),
+                this.body.getComponent(RIGHT_ARM),
+                this.body.getComponent(LEFT_LEG),
+                this.body.getComponent(RIGHT_LEG),
+        };
     }
 
     @Override

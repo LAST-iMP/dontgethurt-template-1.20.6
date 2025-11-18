@@ -85,11 +85,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!check()) return;
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         this.renderCondition();
         this.renderTooltip(guiGraphics, mouseX, mouseY);
-
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     private boolean check() {

@@ -10,7 +10,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class HealingUpdateHandler {
-    private static final PlayerHealthCapability nextTickHealth = new PlayerHealthCapability();
 
     @SubscribeEvent
     public static void onHealingUpdate(PlayerTickEvent.Pre event) {
@@ -18,9 +17,7 @@ public class HealingUpdateHandler {
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
         PlayerHealthCapability.getAndSet(player, health -> {
-            nextTickHealth.deserializeNBT(player.registryAccess(), health.serializeNBT(player.registryAccess()));
-            health = health.update(nextTickHealth);
-            health.deserializeNBT(player.registryAccess(), nextTickHealth.serializeNBT(player.registryAccess()));
+            health = health.update();
             return health;
         });
     }

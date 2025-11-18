@@ -13,8 +13,8 @@ public class LeftLeg extends AbstractExtremities {
         this();
     }
 
-    public static PlayerHealthCapability updateLeftLeg(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth) {
-        health = updateExtremities(health, nextTickHealth, BodyComponents.LEFT_LEG);
-        return health;
+    @Override
+    public void update(PlayerHealthCapability health) {
+        super.update(health);
     }
 }

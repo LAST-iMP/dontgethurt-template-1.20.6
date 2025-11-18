@@ -27,6 +27,13 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         this.stateLevel = stateLevel;
     }
 
+    public void copy(ConditionState state) {
+        this.isInjury = state.isInjury;
+        this.value = state.value;
+        this.hiddenValue = state.hiddenValue;
+        this.stateLevel = state.stateLevel;
+    }
+
     @Override
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();

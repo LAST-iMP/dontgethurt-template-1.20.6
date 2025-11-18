@@ -1,6 +1,7 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -42,12 +43,31 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     public void setCondition(BodyCondition key, ConditionState value) {
-        this.state.put(key, value);
+        state.get(key).copy(value);
     }
 
     public void addConditionValue(BodyCondition key, float value) {
         float newValue = this.getConditionValue(key) + value;
         this.setConditionValue(key, newValue);
+    }
+
+    public void injury(BodyCondition key, float value) {
+        this.addConditionValue(key, value);
+    }
+
+    public void healing(BodyCondition key, float value) {
+        this.addConditionValue(key, value);
+    }
+
+    public abstract void update(PlayerHealthCapability health);
+
+    public void updateInit(PlayerHealthCapability health) {
+
+    }
+
+    protected boolean abnormalWithHidden(BodyCondition condition) {
+        ConditionState state = this.getCondition(condition);
+        return condition.abnormal(state.value) || condition.abnormal(state.hiddenValue);
     }
 
     @Override

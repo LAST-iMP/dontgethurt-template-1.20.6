@@ -9,12 +9,12 @@ public class Head extends AbstractAnyBody {
         super();
     }
 
-    public Head(Void v) {
-        this();
+    @Override
+    public void update(PlayerHealthCapability health) {
+        super.update(health);
     }
 
-    public static PlayerHealthCapability updateHead(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth) {
-        health = updateAnyBody(health, nextTickHealth, BodyComponents.HEAD);
-        return health;
+    public Head(Void v) {
+        this();
     }
 }

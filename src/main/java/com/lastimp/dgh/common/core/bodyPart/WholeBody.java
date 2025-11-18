@@ -16,17 +16,6 @@ public class WholeBody extends AbstractBody {
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
     private static List<BodyCondition> WHOLE_BODY_CONDITIONS;
 
-    public static PlayerHealthCapability update(PlayerHealthCapability health, PlayerHealthCapability nextTickHealth) {
-        health = RightArm.updateRightArm(health, nextTickHealth);
-        health = LeftArm.updateLeftArm(health, nextTickHealth);
-        health = RightLeg.updateRightLeg(health, nextTickHealth);
-        health = LeftLeg.updateLeftLeg(health, nextTickHealth);
-        health = Torso.updateTorso(health, nextTickHealth);
-        health = PlayerBlood.updateBlood(health, nextTickHealth);
-        health = Head.updateHead(health, nextTickHealth);
-        return health;
-    }
-
     public WholeBody() {
         components.put(LEFT_ARM, new LeftArm());
         components.put(RIGHT_ARM, new RightArm());
@@ -47,6 +36,17 @@ public class WholeBody extends AbstractBody {
             WHOLE_BODY_CONDITIONS = List.of();
         }
         return WHOLE_BODY_CONDITIONS;
+    }
+
+    @Override
+    public void update(PlayerHealthCapability health) {
+        components.get(LEFT_ARM).update(health);
+        components.get(RIGHT_ARM).update(health);
+        components.get(LEFT_LEG).update(health);
+        components.get(RIGHT_LEG).update(health);
+        components.get(HEAD).update(health);
+        components.get(TORSO).update(health);
+        components.get(BLOOD).update(health);
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 
+import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class Bandages extends AbstractPartlyHealItem {
@@ -39,9 +40,9 @@ public class Bandages extends AbstractPartlyHealItem {
         return PlayerHealthCapability.getAndSet(player, health -> {
             AbstractBody body = health.getComponent(component);
             float currCondition = body.getConditionValue(BANDAGED);
-            if (currCondition >= 1.0f) return false;
+            if (currCondition > EPS) return false;
 
-            body.addConditionValue(BANDAGED, 0.5f);
+            body.addConditionValue(BANDAGED, 1.0f);
             return true;
         });
     }
