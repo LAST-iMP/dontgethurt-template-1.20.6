@@ -15,6 +15,10 @@ public enum BodyComponents {
 
     WHOLE_BODY;
 
+    private static final BodyComponents[] VISIBLE_BODIES = new BodyComponents[]{
+        LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG, HEAD, TORSO
+    };
+
     @Override
     public String toString() {
         return Component.translatable(this.name()).getString();
@@ -22,5 +26,9 @@ public enum BodyComponents {
 
     public static BodyComponents random() {
         return values()[(int) (Math.random() * 6)];
+    }
+
+    public static BodyComponents[] getVisibleBodies() {
+        return VISIBLE_BODIES;
     }
 }

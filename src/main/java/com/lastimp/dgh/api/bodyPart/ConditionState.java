@@ -7,10 +7,20 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class ConditionState implements INBTSerializable<CompoundTag> {
-    public boolean isInjury;
-    public float value;
-    public float hiddenValue;
-    public int stateLevel;
+    public static final int MAX_TICK = 20;
+    public static final float[] EASE_OUT_QUART = {
+        0.0f,       0.18549375f,    0.3439f,    0.47799375f,    0.59034f,   0.68359375f,    0.7599f,    0.82149375f,
+        0.8704f,    0.90849375f,    0.9375f,    0.95899375f,    0.9744f,    0.98499375f,    0.9919f,    0.99609375f,
+        0.9984f,    0.99949375f,    0.9999f,    0.99999375f,    1.0f
+    };
+
+    private boolean isInjury;
+    private float lastDisplayValue;
+    private float displayValue;
+    private int tickCounter;
+    private float value;
+    private float hiddenValue;
+    private int stateLevel;
 
     public ConditionState() {
         this(true, 0f, 0f, 0);
@@ -21,23 +31,88 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     public ConditionState(boolean isInjury, float value, float hiddenValue, int stateLevel) {
+        this.build(isInjury, value, value, 21, value, hiddenValue, stateLevel);
+    }
+
+    public void copy(ConditionState state) {
+        this.build(state.isInjury, state.lastDisplayValue, state.displayValue, state.tickCounter, state.value, state.hiddenValue, state.stateLevel);
+    }
+
+    private void build(boolean isInjury, float lastDisplayValue, float displayValue, int tickCounter, float value, float hiddenValue, int stateLevel) {
         this.isInjury = isInjury;
+        this.lastDisplayValue = lastDisplayValue;
+        this.displayValue = displayValue;
+        this.tickCounter = tickCounter;
         this.value = value;
         this.hiddenValue = hiddenValue;
         this.stateLevel = stateLevel;
     }
 
-    public void copy(ConditionState state) {
-        this.isInjury = state.isInjury;
-        this.value = state.value;
-        this.hiddenValue = state.hiddenValue;
-        this.stateLevel = state.stateLevel;
+    public float getDisplayValue() {
+        return displayValue;
+    }
+
+    public void setDisplayValue(float displayValue) {
+        this.displayValue = displayValue;
+    }
+
+    public float getHiddenValue() {
+        return hiddenValue;
+    }
+
+    public void setHiddenValue(float hiddenValue) {
+        this.hiddenValue = hiddenValue;
+    }
+
+    public boolean isInjury() {
+        return isInjury;
+    }
+
+    public void setInjury(boolean injury) {
+        isInjury = injury;
+    }
+
+    public float getLastDisplayValue() {
+        return lastDisplayValue;
+    }
+
+    public void setLastDisplayValue(float lastDisplayValue) {
+        this.lastDisplayValue = lastDisplayValue;
+    }
+
+    public int getStateLevel() {
+        return stateLevel;
+    }
+
+    public void setStateLevel(int stateLevel) {
+        this.stateLevel = stateLevel;
+    }
+
+    public int getTickCounter() {
+        return tickCounter;
+    }
+
+    public void setTickCounter(int tickCounter) {
+        this.tickCounter = tickCounter;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public void setValue(float value) {
+        this.lastDisplayValue = this.value;
+        this.value = value;
+        this.tickCounter = 0;
     }
 
     @Override
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("isInjury", this.isInjury);
+        tag.putFloat("lastDisplayValue", this.lastDisplayValue);
+        tag.putFloat("displayValue", this.displayValue);
+        tag.putInt("tickCounter", this.tickCounter);
         tag.putFloat("value", this.value);
         tag.putFloat("hiddenValue", this.hiddenValue);
         tag.putInt("stateLevel", this.stateLevel);
@@ -46,9 +121,14 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
-        this.isInjury = tag.getBoolean("isInjury");
-        this.value = tag.getFloat("value");
-        this.hiddenValue = tag.getFloat("hiddenValue");
-        this.stateLevel = tag.getInt("stateLevel");
+        this.build(
+                tag.getBoolean("isInjury"),
+                tag.getFloat("lastDisplayValue"),
+                tag.getFloat("displayValue"),
+                tag.getInt("tickCounter"),
+                tag.getFloat("value"),
+                tag.getFloat("hiddenValue"),
+                tag.getInt("stateLevel")
+        );
     }
 }

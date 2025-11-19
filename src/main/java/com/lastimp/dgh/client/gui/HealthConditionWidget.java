@@ -13,11 +13,13 @@ import net.minecraft.util.Mth;
 public class HealthConditionWidget extends AbstractWidget {
     private final ResourceLocation texture;
     private final int iconSize = 12;
+    private final int fgColor;
     private float severity = 0f;
 
-    public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture) {
+    public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor) {
         super(0, 0, width, height, message);
         this.texture = texture;
+        this.fgColor = fgColor;
         this.visible = false;
     }
 
@@ -38,13 +40,15 @@ public class HealthConditionWidget extends AbstractWidget {
 
         // draw filled portion
         int filled = (int) (this.width * severity);
-        int fgColor = 0xFFFF7471;
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp(this.getX() + filled, this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, fgColor);
 
         // draw icon from texture (if you want to use atlas, supply proper tex size)
         guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
+        guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
+//        guiGraphics.blitSprite(texture, 100, 32, 0, 0, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
 
-        int stringColor = 0xFF000000;
+
+            int stringColor = 0xFF000000;
         Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
         guiGraphics.drawCenteredString(mc.font, this.getMessage(),
                 this.getX() + 3 + (this.width + iconSize) / 2,

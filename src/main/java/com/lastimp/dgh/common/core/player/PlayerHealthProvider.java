@@ -2,6 +2,7 @@ package com.lastimp.dgh.common.core.player;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -22,6 +23,7 @@ public class PlayerHealthProvider implements ICapabilityProvider<Player, Void, P
 
     @Override
     public @Nullable PlayerHealthCapability getCapability(Player o, Void unused) {
+        this.impl.player = (ServerPlayer) o;
         return this.impl;
     }
 }

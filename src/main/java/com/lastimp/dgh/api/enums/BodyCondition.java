@@ -8,19 +8,19 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
     //any body conditions
-    BURN                ("烧伤", 0.002f, 0.2f),
+    BURN                ("烧伤", 0.002f, 0.2f, "container/condition_icons/burn"),
     INTERNAL_INJURY     ("内伤", 0.002f, 1.0f),
-    OPEN_WOUND          ("开放伤口", 0.002f, 0.1f),
+    OPEN_WOUND          ("开放伤", 0.002f, 0.1f),
     BLEED               ("出血", 0.0f, 0.0f),
     INFECTION           ("感染", 0.0f, 0.0f),
     FOREIGN_OBJECT      ("体内异物", 0.0f, 0.0f),
 
-    BANDAGED            ("已包扎", 0.01f, 1.0f),
-    BANDAGED_DIRTY      ("被污染的绷带", 0.0f, 1.0f),
+    BANDAGED            ("已包扎", 0.01f, 1.0f, 0xFF7DFF49, "container/condition_icons/bandage"),
+    BANDAGED_DIRTY      ("脏绷带", 0.0f, 1.0f, "container/condition_icons/bandage_dirty"),
     OINMENTED           ("已涂药", 0.0f, 0.0f),
 
     // blood conditions
-    BLOOD_VOLUME        ("血容量", 1.0f, 0.0f, 2.0f, 20.0f, 0.05f, 1.0f, null),
+    BLOOD_VOLUME        ("血容量", 0.02f, 0.0f, 1.0f, 0.0f, 2.0f, 20.0f, null),
     SEPSIS              ("败血症", 0.0f, 0.0f),
     HEMOTRANSFUSION     ("输血性休克", 0.0f, 0.0f),
     BLOOD_LOSS          ("失血", 0.0f, 0.0f),
@@ -39,28 +39,43 @@ public enum BodyCondition {
     public final float healingTS;
 
     public final ResourceLocation texture;
+    public final int color;
 
-    BodyCondition(String translation, float healingSpeed, float selfHealingTSString) {
-        this(translation, healingSpeed, selfHealingTSString, "container/condition_icons/burn");
+    BodyCondition(String translation, float healingSpeed, float healingTS) {
+        this(translation, healingSpeed, healingTS,"container/condition_icons/burn");
     }
 
-    BodyCondition(String translation, float healingSpeed, float selfHealingTSString, String path) {
-        this(translation, 0.0f, 0.0f, 1.0f, 20.0f, healingSpeed, selfHealingTSString, path);
+    BodyCondition(String translation, float healingSpeed, float healingTS, String path) {
+        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 20.0f, path);
     }
 
-    BodyCondition(String translation, float defaultValue, float minValue, float maxValue, float factor, float healingSpeed, float healingTS, String path) {
+    BodyCondition(String translation, float healingSpeed, float healingTS, int color, String path) {
+        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 20.0f, color, path);
+    }
+
+    BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, String path) {
+        this(translation, healingSpeed, healingTS, defaultValue, minValue, maxValue, factor, 0xFFFF7471, path);
+    }
+
+    BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, int color, String path) {
         this.translation = translation;
+        this.healingSpeed = healingSpeed;
+        this.healingTS = healingTS;
         this.defaultValue = defaultValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.factor = factor;
-        this.healingSpeed = healingSpeed;
-        this.healingTS = healingTS;
+        this.color = color;
         this.texture = path == null ? null : new ResourceLocation(DontGetHurt.MODID, path);
     }
 
     public boolean abnormal(float value) {
         return defaultValue < value - EPS || defaultValue > value + EPS;
+    }
+
+    public boolean isInjury() {
+        return this == BURN || this == INTERNAL_INJURY || this == OPEN_WOUND || this == BLEED ||
+                this == INFECTION || this == FOREIGN_OBJECT || this == BANDAGED_DIRTY;
     }
 
     @Override

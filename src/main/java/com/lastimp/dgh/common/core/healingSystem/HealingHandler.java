@@ -4,17 +4,19 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.client.gui.HealthScreen;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.common.item.Bandages;
 import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class HealingHandler {
@@ -39,20 +41,36 @@ public class HealingHandler {
         if (mc.player == null) return false;
         if (healthScreen == null) return false;
 
-        Slot slot = healthScreen.getSlotUnderMouse();
+        var slot = healthScreen.getSlotUnderMouse();
         if (slot == null) return false;
-        if (slot.getItem().isEmpty()) return false;
-        if (!(slot.getItem().getItem() instanceof AbstractHealingItem)) return false;
+
+        var itemStack = slot.getItem();
+        if (itemStack.isEmpty()) return false;
+        if (itemStack.is(ModTags.SHEARS)) return true;
+        if (!(itemStack.getItem() instanceof AbstractHealingItem)) return false;
 
         return true;
     }
 
-    public static boolean useHealingItemOn(ItemStack itemStack, ServerPlayer target, BodyComponents component) {
+    public static boolean isConsumableHealingItem(ItemStack itemStack) {
+        return itemStack.getItem() instanceof AbstractHealingItem;
+    }
+
+    public static boolean useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
+        if (target == null) return false;
+        if (itemStack.is(ModTags.SHEARS)) {
+            return Bandages.cut(target, component);
+        }
+        return false;
+    }
+
+    public static boolean useConsumableItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
+        if (target == null) return false;
         AbstractHealingItem healingItem = (AbstractHealingItem) itemStack.getItem();
         if (healingItem instanceof AbstractDirectHealItems item) {
-            return item.heal(target);
+            return item.heal(source, target);
         } else if (healingItem instanceof AbstractPartlyHealItem item) {
-            return item.heal(target, component);
+            return item.heal(source, target, component);
         } else {
             return false;
         }

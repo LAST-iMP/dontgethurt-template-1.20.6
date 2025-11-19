@@ -39,14 +39,19 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public void update(PlayerHealthCapability health) {
-        components.get(LEFT_ARM).update(health);
-        components.get(RIGHT_ARM).update(health);
-        components.get(LEFT_LEG).update(health);
-        components.get(RIGHT_LEG).update(health);
-        components.get(HEAD).update(health);
-        components.get(TORSO).update(health);
-        components.get(BLOOD).update(health);
+    public AbstractBody update(PlayerHealthCapability health) {
+        this.updateComponent(LEFT_ARM, health);
+        this.updateComponent(RIGHT_ARM, health);
+        this.updateComponent(LEFT_LEG, health);
+        this.updateComponent(RIGHT_LEG, health);
+        this.updateComponent(HEAD, health);
+        this.updateComponent(TORSO, health);
+        this.updateComponent(BLOOD, health);
+        return this;
+    }
+
+    private void updateComponent(BodyComponents component, PlayerHealthCapability health) {
+        components.get(component).updatePre(health).update(health).updatePost(health);
     }
 
     @Override

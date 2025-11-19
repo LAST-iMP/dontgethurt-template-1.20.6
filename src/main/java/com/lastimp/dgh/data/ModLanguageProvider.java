@@ -22,8 +22,10 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.HEALTH_SCANNER.get(), "健康扫描仪");
         this.add(ModItems.BLOOD_SCANNER.get(), "血液扫描仪");
         this.add(ModItems.BLOOD_PACK.get(), "血袋");
+        this.add(ModItems.BLOOD_PACK_EMPTY.get(), "空血袋");
         this.add(ModItems.BANDAGE.get(), "绷带");
         this.add(ModItems.MORPHINE.get(), "吗啡");
+        this.add(ModItems.SUTURE.get(), "缝合线");
         this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
 
     }

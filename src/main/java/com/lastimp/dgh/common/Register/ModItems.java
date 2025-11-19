@@ -50,6 +50,13 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final DeferredItem<Item> BLOOD_PACK_EMPTY = ITEMS.registerItem(
+            "blood_pack_empty",
+            BloodPacksEmpty::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static final DeferredItem<BloodScanner> BLOOD_SCANNER = ITEMS.registerItem(
             "blood_scanner",
             BloodScanner::new,
@@ -69,6 +76,13 @@ public class ModItems {
             Morphine::new,
             new Item.Properties()
                     .stacksTo(16)
+    );
+
+    public static final DeferredItem<Sutures> SUTURE = ITEMS.registerItem(
+            "suture",
+            Sutures::new,
+            new Item.Properties()
+                    .stacksTo(64)
     );
 
     public static void register(IEventBus eventBus) {

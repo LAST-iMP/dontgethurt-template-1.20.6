@@ -8,6 +8,8 @@ import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -39,7 +41,7 @@ public class InjuryHandler {
             handleExplosion(damageAmount, player, event);
         } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
             handleEntityAttack(damageAmount, player, event);
-        } else {
+        } else if (!source.is(DamageTypes.GENERIC_KILL)) {
             handleDefaultDamage(damageAmount, player, event);
         }
     }

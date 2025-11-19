@@ -4,7 +4,6 @@ import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.data.DataProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -12,7 +11,7 @@ public class ModDataGeneratorHandler {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        ExistingFileHelper efh = event.getExistingFileHelper();
+        var efh = event.getExistingFileHelper();
 
         event.getGenerator().addProvider(
                 event.includeClient(),
@@ -33,6 +32,11 @@ public class ModDataGeneratorHandler {
         event.getGenerator().addProvider(
                 event.includeServer(),
                 (DataProvider.Factory<ModRecipeProvider>) output -> new ModRecipeProvider(output, lp)
+        );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModTagsProvider>) output -> new ModTagsProvider(output, lp, DontGetHurt.MODID, efh)
         );
     }
 }

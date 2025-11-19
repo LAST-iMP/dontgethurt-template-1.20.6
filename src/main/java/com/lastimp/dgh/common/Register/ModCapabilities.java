@@ -13,7 +13,10 @@ import java.util.function.Supplier;
 
 public class ModCapabilities {
     public static final EntityCapability<PlayerHealthCapability, Void> PLAYER_HEALTH_HANDLER =
-            EntityCapability.createVoid(new ResourceLocation(DontGetHurt.MODID, "player_health_handler"), PlayerHealthCapability.class);
+            EntityCapability.createVoid(
+                    new ResourceLocation(DontGetHurt.MODID, "player_health_handler"),
+                    PlayerHealthCapability.class
+            );
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, DontGetHurt.MODID);

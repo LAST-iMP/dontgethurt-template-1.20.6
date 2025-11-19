@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.common.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
@@ -15,6 +16,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
+    protected ServerPlayer player;
 
     public static PlayerHealthCapability get(Player player) {
         return player.getData(ModCapabilities.PLAYER_HEALTH);

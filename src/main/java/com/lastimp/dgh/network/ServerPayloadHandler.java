@@ -2,15 +2,12 @@ package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.common.core.healingSystem.HealingHandler;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
 import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -44,9 +41,13 @@ public class ServerPayloadHandler {
                     ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
                     BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
 
-                    boolean success = HealingHandler.useHealingItemOn(stack, target, component);
-                    if (success) {
-                        stack.consume(1, target);
+                    if (!HealingHandler.isConsumableHealingItem(stack)) {
+                        HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+                    } else {
+                        boolean success = HealingHandler.useConsumableItemOn(stack, sourcePlayer, target, component);
+                        if (success) {
+                            stack.consume(1, target);
+                        }
                     }
         })
                 .exceptionally(e -> {

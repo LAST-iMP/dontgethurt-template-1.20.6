@@ -11,12 +11,12 @@ public abstract class AbstractPartlyHealItem extends AbstractHealingItem{
         super(properties);
     }
 
-    public boolean heal(ServerPlayer player, BodyComponents component) {
+    public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
         if (component == null) return false;
-        return this.healOn(player, component);
+        return this.healOn(source, target, component);
     }
 
-    protected abstract boolean healOn(@NotNull ServerPlayer player, BodyComponents component);
+    protected abstract boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component);
 
     public abstract HashSet<BodyComponents> getApplicableComponents();
 }

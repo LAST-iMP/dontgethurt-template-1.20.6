@@ -8,5 +8,5 @@ public abstract class AbstractDirectHealItems extends AbstractHealingItem{
         super(properties);
     }
 
-    public abstract boolean heal(@NotNull ServerPlayer player);
+    public abstract boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target);
 }

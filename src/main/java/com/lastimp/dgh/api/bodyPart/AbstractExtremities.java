@@ -2,7 +2,7 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 
-public abstract class AbstractExtremities extends AbstractAnyBody {
+public abstract class AbstractExtremities extends AbstractVisibleBody {
     public AbstractExtremities() {
         super();
     }
@@ -12,7 +12,7 @@ public abstract class AbstractExtremities extends AbstractAnyBody {
     }
 
     @Override
-    public void update(PlayerHealthCapability health) {
-        super.update(health);
+    public AbstractBody update(PlayerHealthCapability health) {
+        return super.update(health);
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -21,7 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
+import static com.lastimp.dgh.client.gui.HealthComponentWidget.*;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
@@ -29,7 +32,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final int PANEL_WIDTH = 238;   // 面板宽度
     private static final int PANEL_HEIGHT = 214;  // 面板高度
 
-    private final List<HealthComponentWidget> componentWidgets = new ArrayList<>();
+    private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
     private final HashMap<BodyCondition, HealthConditionWidget> conditionWidgets = new HashMap<>();
     private BodyComponents selectedComponent = null;
     private static PlayerHealthCapability healthData = null;
@@ -48,12 +51,12 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
         // 清理旧的
         componentWidgets.clear();
-        this.addHealthWidget(35, 8, 27, 29, BodyComponents.HEAD);
-        this.addHealthWidget(34,41, 28, 38, BodyComponents.TORSO);
-        this.addHealthWidget(21, 42, 10, 44, BodyComponents.LEFT_ARM);
-        this.addHealthWidget(66, 42, 10, 44, BodyComponents.RIGHT_ARM);
-        this.addHealthWidget(33, 80, 11, 43, BodyComponents.LEFT_LEG);
-        this.addHealthWidget(52, 80, 11, 43, BodyComponents.RIGHT_LEG);
+        this.addHealthWidget(31, 6, 34, 32, HEAD, SPRITES_HEAD, SPRITES_HEAD_LIGHT);
+        this.addHealthWidget(32,40, 32, 39, TORSO, SPRITES_TORSO, SPRITES_TORSO_LIGHT);
+        this.addHealthWidget(20, 41, 12, 46, LEFT_ARM, SPRITES_LEFT_ARM, SPRITES_LEFT_ARM_LIGHT);
+        this.addHealthWidget(65, 41, 12, 46, RIGHT_ARM, SPRITES_RIGHT_ARM, SPRITES_RIGHT_ARM_LIGHT);
+        this.addHealthWidget(29, 79, 18, 45, LEFT_LEG, SPRITES_LEFT_LEG, SPRITES_LEFT_LEG_LIGHT);
+        this.addHealthWidget(49, 79, 18, 45, RIGHT_LEG, SPRITES_RIGHT_LEG, SPRITES_RIGHT_LEG_LIGHT);
 
         conditionWidgets.clear();
         for (BodyCondition condition : HealthScanner.healthScannerConditions()) {
@@ -61,22 +64,22 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
     }
 
-    private void addHealthWidget(int x, int y, int width, int height, BodyComponents idx) {
+    private void addHealthWidget(int x, int y, int width, int height, BodyComponents idx, ResourceLocation resource, ResourceLocation resourceLighted) {
         HealthComponentWidget w = new HealthComponentWidget(
                 this.leftPos + x, this.topPos + y, width, height,
                 Component.literal(idx.toString()),
                 (button) -> {
                     this.selectedComponent = idx;
                 },
-                idx
+                idx, resource, resourceLighted
         );
-        componentWidgets.add(w);
+        componentWidgets.put(idx, w);
         this.addRenderableWidget(w);
     }
 
     private void addConditionWidget(BodyCondition condition) {
         HealthConditionWidget w = new HealthConditionWidget(
-                70, 16, condition.getComponent(), condition.texture
+                70, 16, condition.getComponent(), condition.texture, condition.color
         );
         conditionWidgets.put(condition, w);
         this.addRenderableWidget(w);
@@ -85,9 +88,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!check()) return;
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.refreshComponent();
+        this.refreshCondition();
 
-        this.renderCondition();
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
@@ -97,7 +101,24 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         return !(mc.level == null || mc.player == null || mc.options.hideGui);
     }
 
-    private void renderCondition() {
+    private void refreshComponent() {
+        if (healthData == null) return;
+        if (this.componentWidgets.isEmpty()) return;
+
+        for (BodyComponents component : BodyComponents.getVisibleBodies()) {
+            AbstractBody body = healthData.getComponent(component);
+            float injury = 0.0f;
+            for (BodyCondition condition : body.getBodyConditions()) {
+                if (!condition.isInjury()) continue;
+                float value = body.getCondition(condition).getDisplayValue();
+                if (!condition.abnormal(value)) continue;
+                injury += Mth.abs(value - condition.defaultValue);
+            }
+            this.componentWidgets.get(component).setConditionValue(Mth.clamp(injury, 0.0f, 1.0f) * 0.7f);
+        }
+    }
+
+    private void refreshCondition() {
         if (selectedComponent == null) return;
         if (healthData == null) return;
 
@@ -106,7 +127,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
 
         int widgetCount = 0;
-        AbstractBody bodyPart = (AbstractBody) healthData.getComponent(this.selectedComponent);
+        AbstractBody bodyPart = healthData.getComponent(this.selectedComponent);
         List<BodyCondition> conditions = bodyPart.getBodyConditions();
         for (BodyCondition condition : conditions) {
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
@@ -118,7 +139,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
                     this.leftPos + 85 + (widgetCount % 2) * 72,
                     this.topPos + 11 + (widgetCount / 2) * 18
             );
-            widget.setSeverity(bodyPart.getConditionValue(condition));
+            widget.setSeverity(bodyPart.getCondition(condition).getDisplayValue());
             widget.visible = true;
             widgetCount += 1;
         }

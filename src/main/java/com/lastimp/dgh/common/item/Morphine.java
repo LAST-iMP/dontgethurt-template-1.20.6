@@ -12,14 +12,9 @@ public class Morphine extends AbstractDirectHealItems {
     }
 
     @Override
-    public boolean heal(@NotNull ServerPlayer player) {
-        return PlayerHealthCapability.getAndSet(player, health -> {
-//            IAbstractBody body = health.getComponent(BodyComponents.BLOOD);
-//            float currCondition = body.getCondition(BLOOD_VOLUME);
-//            if (currCondition >= 2.0f) return false;
-//
-//            body.addCondition(BLOOD_VOLUME, 0.25f);
-//            return true;
+    public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
+        return PlayerHealthCapability.getAndSet(source, health -> {
+
             return false;
         });
     }

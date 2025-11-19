@@ -25,12 +25,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract List<BodyCondition> getBodyConditions();
 
-    public boolean hasCondition(BodyCondition key) {
-        return state.containsKey(key);
-    }
-
     public float getConditionValue(BodyCondition key) {
-        return this.getCondition(key).value;
+        return this.getCondition(key).getValue();
     }
 
     public ConditionState getCondition(BodyCondition key) {
@@ -39,11 +35,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public void setConditionValue(BodyCondition key, float value) {
         ConditionState state = this.state.get(key);
-        state.value = Mth.clamp(value, key.minValue, key.maxValue);
-    }
-
-    public void setCondition(BodyCondition key, ConditionState value) {
-        state.get(key).copy(value);
+        state.setValue(Mth.clamp(value, key.minValue, key.maxValue));
     }
 
     public void addConditionValue(BodyCondition key, float value) {
@@ -59,15 +51,38 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.addConditionValue(key, value);
     }
 
-    public abstract void update(PlayerHealthCapability health);
+    public abstract AbstractBody update(PlayerHealthCapability health);
 
-    public void updateInit(PlayerHealthCapability health) {
+    public AbstractBody updatePre(PlayerHealthCapability health) {
+        return this;
+    }
 
+    public AbstractBody updatePost(PlayerHealthCapability health) {
+        this.updateDisplayValue(health);
+        return this;
+    }
+
+    public void updateDisplayValue(PlayerHealthCapability health) {
+        for (BodyCondition condition : this.getBodyConditions()) {
+            ConditionState state = this.getCondition(condition);
+            if (state.getTickCounter() > 20) continue;
+            float weight = this.easeOutQuart(state.getTickCounter());
+            float displayValue = state.getLastDisplayValue() * (1 - weight) + state.getValue() * weight;
+            state.setDisplayValue(displayValue);
+            state.setTickCounter(state.getTickCounter() + 1);
+            if (state.getTickCounter() > 20) {
+                state.setLastDisplayValue(state.getValue());
+            }
+        }
+    }
+
+    protected float easeOutQuart(int tick) {
+        return ConditionState.EASE_OUT_QUART[tick];
     }
 
     protected boolean abnormalWithHidden(BodyCondition condition) {
         ConditionState state = this.getCondition(condition);
-        return condition.abnormal(state.value) || condition.abnormal(state.hiddenValue);
+        return condition.abnormal(state.getValue()) || condition.abnormal(state.getHiddenValue());
     }
 
     @Override
