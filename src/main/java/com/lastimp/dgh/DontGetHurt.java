@@ -1,10 +1,10 @@
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.common.Register.ModCapabilities;
-import com.lastimp.dgh.common.Register.ModCreativeModTabs;
-import com.lastimp.dgh.common.Register.ModItems;
-import com.lastimp.dgh.common.Register.ModMenus;
-import com.lastimp.dgh.client.gui.HealthScreen;
+import com.lastimp.dgh.source.Register.ModCapabilities;
+import com.lastimp.dgh.source.Register.ModCreativeModTabs;
+import com.lastimp.dgh.source.Register.ModItems;
+import com.lastimp.dgh.source.Register.ModMenus;
+import com.lastimp.dgh.source.client.gui.HealthScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -48,7 +48,7 @@ public class DontGetHurt
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        // Some common setup code
+        // Some source setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
 
         if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {

@@ -1,0 +1,24 @@
+{
+  "name": "伤口",
+  "icon": "minecraft:rotten_flesh",
+  "category": "dgh:health",
+  "read_by_default": false,
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "烧伤由各种火焰伤害引起，会导致中等程度的失血。需要绷带包扎。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "开放性伤口由各种生物攻击引起，会导致大量失血。需要使用缝合线进行缝合或绷带包扎。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "内伤由各种撞击或环境伤害引起，会导致少量失血。$(br2)被污染的绷带包裹的伤口会引起感染，也会引发内伤。$(br2)无法包扎止血，不过当玩家有饱和度时，会加快恢复速度。"
+    }
+  ]
+}

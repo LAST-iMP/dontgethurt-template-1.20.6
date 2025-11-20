@@ -9,9 +9,9 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 public enum BodyCondition {
     //any body conditions
     BURN                ("烧伤", 1.0f / 500, 0.2f, "container/condition_icons/burn"),
-    INTERNAL_INJURY     ("内伤", 1.0f / 500, 1.0f),
-    OPEN_WOUND          ("开放伤", 1.0f / 500, 0.5f),
-    BLEED               ("出血", 0.0f, 0.0f),
+    INTERNAL_INJURY     ("内伤", 1.0f / 500, 1.0f, "container/condition_icons/internal_injury"),
+    OPEN_WOUND          ("开放伤", 1.0f / 500, 0.5f, "container/condition_icons/open_wound"),
+    BLEED               ("出血", 0.0f, 0.0f, "container/condition_icons/bleeding"),
     INFECTION           ("感染", 0.0f, 0.0f),
     FOREIGN_OBJECT      ("体内异物", 0.0f, 0.0f),
 

@@ -1,10 +1,13 @@
 package com.lastimp.dgh.network;
 
+import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.common.core.healingSystem.HealingHandler;
+import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
+import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,6 +34,21 @@ public class ServerPayloadHandler {
                     context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
                     return null;
                 });
+    }
+
+    public static void handleClientPress(final MyKeyPressedData data, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+                    KeyPressedType key = KeyPressedType.valueOf(data.key());
+                    ServerPlayer player = (ServerPlayer) context.player();
+                    if (key == KeyPressedType.KEY_HEALTH_MENU) {
+                        HealthMenuProvider.open(player, player.getUUID(), false);
+                    }
+                })
+                .exceptionally(e -> {
+                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
+                    return null;
+                });
+
     }
 
     public static void handleHealingItemUsageData(final MyHealingItemUseData data, final IPayloadContext context) {

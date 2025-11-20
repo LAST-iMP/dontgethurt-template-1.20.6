@@ -1,0 +1,30 @@
+{
+  "name": "基本概念-生命",
+  "icon": "minecraft:golden_apple",
+  "category": "dgh:health",
+  "read_by_default": false,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "你或许已经注意到了，你现在受伤的时候并不会直接损失生命，真是一个好消息！$(br)但是，你受到的伤害都会转变成各种伤口。按下o(默认)可以打开健康面板，看到你自己的健康状态。$(br)如果你有生命扫描仪，你可以得到更多信息甚至查看别人的状态。"
+    },
+    {
+      "type": "image",
+      "images": [
+        "dgh:textures/book/health_hud.png"
+      ]
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "目前存在3种伤口，分别是$(br2)烧伤（被灼烧引起）$(br2)开放性伤口（攻击引起）$(br2)内伤（撞击、窒息、感染等引起）$(br2)伤口导致流血，流血导致死亡"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "玩家的血容量需要使用血液扫描仪才能看到"
+    }
+  ]
+}

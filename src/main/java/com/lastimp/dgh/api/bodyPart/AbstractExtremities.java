@@ -1,6 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.world.entity.player.Player;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {

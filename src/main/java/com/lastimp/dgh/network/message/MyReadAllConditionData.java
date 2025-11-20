@@ -1,7 +1,7 @@
 package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;

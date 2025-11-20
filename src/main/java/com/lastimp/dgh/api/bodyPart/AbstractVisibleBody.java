@@ -1,6 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -92,7 +92,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
                 this.injuryHidden(INTERNAL_INJURY, -delta);
             else
                 this.injury(INTERNAL_INJURY, -delta * 4);
-            player.getFoodData().addExhaustion(delta * 4);
+            player.causeFoodExhaustion(delta * 4);
         }
     }
 

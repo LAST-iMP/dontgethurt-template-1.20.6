@@ -1,0 +1,33 @@
+{
+  "name": "实用工具",
+  "icon": "dgh:health_scanner",
+  "category": "dgh:tools_and_medic",
+  "read_by_default": false,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "健康扫描仪",
+      "item": "dgh:health_scanner",
+      "scale": 1.2,
+      "text": "健康扫描仪！它能够通过右键打开自己或者其他人的健康界面。相比于肉眼观察，它能够显示更多信息，而且允许你治疗他人！",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:health_scanner"
+    },
+    {
+      "type": "spotlight",
+      "title": "血液扫描仪",
+      "item": "dgh:blood_scanner",
+      "scale": 1.2,
+      "text": "血液扫描仪！它能够通过右键来扫描自己或者其他人的血液信息。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:blood_scanner"
+    }
+  ]
+}

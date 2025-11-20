@@ -1,0 +1,29 @@
+package com.lastimp.dgh.source.core.player;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.Nullable;
+
+public class PlayerHealthProvider implements ICapabilityProvider<Player, Void, PlayerHealthCapability>, INBTSerializable<CompoundTag> {
+    private final PlayerHealthCapability impl = new PlayerHealthCapability();
+
+    @Override
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+        return impl.serializeNBT(provider);
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        impl.deserializeNBT(provider, nbt);
+    }
+
+    @Override
+    public @Nullable PlayerHealthCapability getCapability(Player o, Void unused) {
+        this.impl.player = (ServerPlayer) o;
+        return this.impl;
+    }
+}
