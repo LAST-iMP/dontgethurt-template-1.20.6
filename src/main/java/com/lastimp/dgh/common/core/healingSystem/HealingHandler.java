@@ -12,6 +12,7 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -56,23 +57,20 @@ public class HealingHandler {
         return itemStack.getItem() instanceof AbstractHealingItem;
     }
 
-    public static boolean useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
-        if (target == null) return false;
+    public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
+        if (target == null) return;
         if (itemStack.is(ModTags.SHEARS)) {
-            return Bandages.cut(target, component);
+            Bandages.cut(target, component);
+            return;
         }
-        return false;
-    }
-
-    public static boolean useConsumableItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
-        if (target == null) return false;
-        AbstractHealingItem healingItem = (AbstractHealingItem) itemStack.getItem();
-        if (healingItem instanceof AbstractDirectHealItems item) {
-            return item.heal(source, target);
-        } else if (healingItem instanceof AbstractPartlyHealItem item) {
-            return item.heal(source, target, component);
-        } else {
-            return false;
+        boolean consume = false;
+        if (itemStack.getItem() instanceof AbstractDirectHealItems item) {
+            consume = item.heal(source, target);
+        } else if (itemStack.getItem() instanceof AbstractPartlyHealItem item) {
+            consume = item.heal(source, target, component);
+        }
+        if (consume) {
+            itemStack.consume(1, target);
         }
     }
 

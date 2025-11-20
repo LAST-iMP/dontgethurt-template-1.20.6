@@ -75,7 +75,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         if (isBandaged()) return;
         ConditionState bleed = this.getCondition(BLEED);
-        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(BURN).getValue() * 0.3f, BLEED.minValue, BLEED.maxValue));
+        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(BURN).getValue() * 0.2f, BLEED.minValue, BLEED.maxValue));
     }
 
     private void handleInternalInjury(PlayerHealthCapability health, Player player) {
@@ -83,13 +83,16 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleCover(INTERNAL_INJURY, 1.0f);
 
         ConditionState bleed = this.getCondition(BLEED);
-        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(INTERNAL_INJURY).getValue() * 0.2f, BLEED.minValue, BLEED.maxValue));
+        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(INTERNAL_INJURY).getValue() * 0.1f, BLEED.minValue, BLEED.maxValue));
 
         float saturation = player.getFoodData().getSaturationLevel();
         float delta = INTERNAL_INJURY.healingSpeed * DELTA;
-        if (saturation >= delta) {
-            bleed.setValue(bleed.getValue() - delta);
-            player.getFoodData().setSaturation(saturation - delta);
+        if (saturation > 0) {
+            if (INTERNAL_INJURY.abnormal(this.getCondition(INTERNAL_INJURY).getHiddenValue()))
+                this.injuryHidden(INTERNAL_INJURY, -delta);
+            else
+                this.injury(INTERNAL_INJURY, -delta * 4);
+            player.getFoodData().addExhaustion(delta * 4);
         }
     }
 
@@ -99,7 +102,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         if (isBandaged()) return;
         ConditionState bleed = this.getCondition(BLEED);
-        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(OPEN_WOUND).getValue() * 0.5f, BLEED.minValue, BLEED.maxValue));
+        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(OPEN_WOUND).getValue() * 0.3f, BLEED.minValue, BLEED.maxValue));
     }
 
     private void handleCover(BodyCondition condition, float acc) {

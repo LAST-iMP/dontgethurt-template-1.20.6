@@ -41,14 +41,7 @@ public class ServerPayloadHandler {
                     ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
                     BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
 
-                    if (!HealingHandler.isConsumableHealingItem(stack)) {
-                        HealingHandler.useItemOn(stack, sourcePlayer, target, component);
-                    } else {
-                        boolean success = HealingHandler.useConsumableItemOn(stack, sourcePlayer, target, component);
-                        if (success) {
-                            stack.consume(1, target);
-                        }
-                    }
+                    HealingHandler.useItemOn(stack, sourcePlayer, target, component);
         })
                 .exceptionally(e -> {
                     context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));

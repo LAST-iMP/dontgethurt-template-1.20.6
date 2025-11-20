@@ -48,8 +48,18 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.addConditionValue(key, value);
     }
 
+    public void injuryHidden(BodyCondition key, float value) {
+        ConditionState state = this.state.get(key);
+        state.setHiddenValue(Mth.clamp(state.getHiddenValue() + value, key.minValue, key.maxValue));
+    }
+
     public void healing(BodyCondition key, float value) {
         this.addConditionValue(key, value);
+    }
+
+    public void healingHidden(BodyCondition key, float value) {
+        ConditionState state = this.state.get(key);
+        state.setHiddenValue(Mth.clamp(state.getHiddenValue() + value, key.minValue, key.maxValue));
     }
 
     public abstract AbstractBody update(PlayerHealthCapability health, Player player);
