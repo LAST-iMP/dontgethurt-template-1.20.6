@@ -1,4 +1,4 @@
-package com.lastimp.dgh.network.DataPack;
+package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;

@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,19 +40,19 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health) {
-        this.updateComponent(LEFT_ARM, health);
-        this.updateComponent(RIGHT_ARM, health);
-        this.updateComponent(LEFT_LEG, health);
-        this.updateComponent(RIGHT_LEG, health);
-        this.updateComponent(HEAD, health);
-        this.updateComponent(TORSO, health);
-        this.updateComponent(BLOOD, health);
+    public AbstractBody update(PlayerHealthCapability health, Player player) {
+        this.updateComponent(LEFT_ARM, health, player);
+        this.updateComponent(RIGHT_ARM, health, player);
+        this.updateComponent(LEFT_LEG, health, player);
+        this.updateComponent(RIGHT_LEG, health, player);
+        this.updateComponent(HEAD, health, player);
+        this.updateComponent(TORSO, health, player);
+        this.updateComponent(BLOOD, health, player);
         return this;
     }
 
-    private void updateComponent(BodyComponents component, PlayerHealthCapability health) {
-        components.get(component).updatePre(health).update(health).updatePost(health);
+    private void updateComponent(BodyComponents component, PlayerHealthCapability health, Player player) {
+        components.get(component).updatePre(health, player).update(health, player).updatePost(health, player);
     }
 
     @Override

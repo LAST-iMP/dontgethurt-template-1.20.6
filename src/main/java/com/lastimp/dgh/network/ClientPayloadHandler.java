@@ -2,14 +2,10 @@ package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.client.gui.HealthScreen;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.common.item.BloodScanner;
-import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
+import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;

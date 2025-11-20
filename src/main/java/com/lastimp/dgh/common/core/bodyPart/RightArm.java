@@ -4,6 +4,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import net.minecraft.world.entity.player.Player;
 
 public class RightArm extends AbstractExtremities {
     public RightArm() {
@@ -15,7 +16,7 @@ public class RightArm extends AbstractExtremities {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health) {
-        return super.update(health);
+    public AbstractBody update(PlayerHealthCapability health, Player player) {
+        return super.update(health, player);
     }
 }

@@ -3,6 +3,7 @@ package com.lastimp.dgh.api.bodyPart;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
@@ -33,10 +34,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health) {
+    public AbstractBody update(PlayerHealthCapability health, Player player) {
         handleBandaged(health);
         handleBurning(health);
-        handleInternalInjury(health);
+        handleInternalInjury(health, player);
         handleOpenWound(health);
 
         handleBleeding(health);
@@ -44,8 +45,8 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody updatePre(PlayerHealthCapability health) {
-        super.updatePre(health);
+    public AbstractBody updatePre(PlayerHealthCapability health, Player player) {
+        super.updatePre(health, player);
         this.getCondition(BLEED).setValue(0);
         return this;
     }
@@ -66,7 +67,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         } else if (this.abnormalWithHidden(BANDAGED_DIRTY) && OPEN_WOUND.abnormal(openWound.getHiddenValue())) {
             innerInjury.setValue(Mth.clamp(innerInjury.getValue() + openWound.getHiddenValue() * 0.1f * DELTA, INTERNAL_INJURY.minValue, INTERNAL_INJURY.maxValue));
         }
-
     }
 
     private void handleBurning(PlayerHealthCapability health) {
@@ -78,17 +78,24 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(BURN).getValue() * 0.3f, BLEED.minValue, BLEED.maxValue));
     }
 
-    private void handleInternalInjury(PlayerHealthCapability health) {
+    private void handleInternalInjury(PlayerHealthCapability health, Player player) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
-        this.handleCover(INTERNAL_INJURY, 2.0f);
+        this.handleCover(INTERNAL_INJURY, 1.0f);
 
         ConditionState bleed = this.getCondition(BLEED);
         bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(INTERNAL_INJURY).getValue() * 0.2f, BLEED.minValue, BLEED.maxValue));
+
+        float saturation = player.getFoodData().getSaturationLevel();
+        float delta = INTERNAL_INJURY.healingSpeed * DELTA;
+        if (saturation >= delta) {
+            bleed.setValue(bleed.getValue() - delta);
+            player.getFoodData().setSaturation(saturation - delta);
+        }
     }
 
     private void handleOpenWound(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(OPEN_WOUND)) return;
-        this.handleCover(OPEN_WOUND, 2.0f);
+        this.handleCover(OPEN_WOUND, 1.2f);
 
         if (isBandaged()) return;
         ConditionState bleed = this.getCondition(BLEED);

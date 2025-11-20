@@ -37,8 +37,8 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         return this.body.getComponent(component);
     }
 
-    public PlayerHealthCapability update() {
-        this.body.update(this);
+    public PlayerHealthCapability update(Player player) {
+        this.body.update(this, player);
         return this;
     }
 

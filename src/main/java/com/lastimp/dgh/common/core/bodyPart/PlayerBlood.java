@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health) {
+    public AbstractBody update(PlayerHealthCapability health, Player player) {
         this.handleBloodVolume(health);
         return this;
     }
@@ -51,9 +52,9 @@ public class PlayerBlood extends AbstractBody {
         if (this.isBleeding(health)) return;
 
         ConditionState state = this.getCondition(BLOOD_VOLUME);
-        if (state.getValue() >= BLOOD_VOLUME.defaultValue + EPS)
+        if (state.getValue() > BLOOD_VOLUME.defaultValue)
             state.setValue(Mth.clamp(state.getValue() - BLOOD_VOLUME.healingSpeed * DELTA, BLOOD_VOLUME.minValue, BLOOD_VOLUME.maxValue));
-        else
+        else if (state.getValue() <= BLOOD_VOLUME.defaultValue - EPS)
             state.setValue(Mth.clamp(state.getValue() + BLOOD_VOLUME.healingSpeed * DELTA, BLOOD_VOLUME.minValue, BLOOD_VOLUME.maxValue));
     }
 

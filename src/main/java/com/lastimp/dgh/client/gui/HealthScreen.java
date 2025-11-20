@@ -8,7 +8,7 @@ import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.common.item.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
-import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
+import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -132,7 +131,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         for (BodyCondition condition : conditions) {
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
             if (!HealthScanner.healthScannerConditions().contains(condition)) continue;
-            if (!condition.abnormal(bodyPart.getConditionValue(condition))) continue;
+            if (!condition.abnormal(bodyPart.getCondition(condition).getDisplayValue())) continue;
             if (widgetCount > 12) break;
 
             widget.setPosition(

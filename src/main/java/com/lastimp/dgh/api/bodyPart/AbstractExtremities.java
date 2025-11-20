@@ -1,6 +1,7 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
+import net.minecraft.world.entity.player.Player;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
     public AbstractExtremities() {
@@ -12,7 +13,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health) {
-        return super.update(health);
+    public AbstractBody update(PlayerHealthCapability health, Player player) {
+        return super.update(health, player);
     }
 }

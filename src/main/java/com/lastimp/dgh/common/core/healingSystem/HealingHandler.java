@@ -8,7 +8,7 @@ import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.client.gui.HealthScreen;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.common.item.Bandages;
-import com.lastimp.dgh.network.DataPack.MyHealingItemUseData;
+import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;

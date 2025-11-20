@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.common.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.common.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.network.DataPack.MyReadAllConditionData;
+import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
