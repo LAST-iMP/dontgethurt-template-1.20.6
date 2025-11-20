@@ -1,5 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.core.HolderLookup;

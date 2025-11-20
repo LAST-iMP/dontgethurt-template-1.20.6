@@ -1,36 +1,108 @@
 package com.lastimp.dgh;
 
-import java.util.List;
-
+import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-// An example config class. This is not required, but it's a good idea to have one to keep your config organized.
-// Demonstrates how to use Neo's config APIs
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@EventBusSubscriber(modid = DontGetHurt.MODID,bus = EventBusSubscriber.Bus.MOD)
 public class Config {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
+            .comment("General settings")
+            .push("general");
 
-    public static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
-            .comment("Whether to log the dirt block on source setup")
-            .define("logDirtBlock", true);
+    public static final ModConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
+            .defineInRange("DIRTY_BANDAGE_RATIO",0.1,0,1);
 
-    public static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
-            .comment("A magic number")
-            .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
+    public static final ModConfigSpec.DoubleValue BANDAGE_BURN_ACC = BUILDER
+            .defineInRange("BANDAGE_BURN_ACC",2.0,0,10);
 
-    public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
+    public static final ModConfigSpec.DoubleValue BANDAGE_INTERNAL_ACC = BUILDER
+            .defineInRange("BANDAGE_INTERNAL_ACC",1.0,0,10);
 
-    // a list of strings that are treated as resource locations for item
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of item to log on source setup.")
-            .defineListAllowEmpty("item", List.of("minecraft:iron_ingot"), Config::validateItemName);
+    public static final ModConfigSpec.DoubleValue BANDAGE_OPEN_WOUND_ACC = BUILDER
+            .defineInRange("BANDAGE_OPEN_WOUND_ACC",1.3,0,10);
 
-    static final ModConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec.DoubleValue BURN_BLEED_RATIO = BUILDER
+            .defineInRange("BURN_BLEED_RATIO",0.4,0,10);
 
-    private static boolean validateItemName(final Object obj) {
+    public static final ModConfigSpec.DoubleValue INTERNAL_BLEED_RATIO = BUILDER
+            .defineInRange("INTERNAL_BLEED_RATIO",0.2,0,10);
+
+    public static final ModConfigSpec.DoubleValue OPEN_WOUND_BLEED_RATIO = BUILDER
+            .defineInRange("OPEN_WOUND_BLEED_RATIO",0.5,0,10);
+
+    public static final ModConfigSpec.DoubleValue INTERNAL_FOOD_HEALING = BUILDER
+            .defineInRange("INTERNAL_FOOD_HEALING",4.0,1.0, Float.MAX_VALUE);
+
+    public static final ModConfigSpec.DoubleValue BLEED_VOLUME_RATIO = BUILDER
+            .defineInRange("BLEED_VOLUME_RATIO",0.05,1.0, Float.MAX_VALUE);
+
+    public static final ModConfigSpec.IntValue BURN_SELF_HEALING_TIME = BUILDER
+            .defineInRange("BURN_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
+
+    public static final ModConfigSpec.IntValue INTERNAL_SELF_HEALING_TIME = BUILDER
+            .defineInRange("INTERNAL_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
+
+    public static final ModConfigSpec.IntValue OPEN_WOUND_SELF_HEALING_TIME = BUILDER
+            .defineInRange("OPEN_WOUND_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
+
+    public static final ModConfigSpec.IntValue BANDAGE_AVAILABLE_TIME = BUILDER
+            .defineInRange("BANDAGE_AVAILABLE_TIME",100,1, Integer.MAX_VALUE);
+
+    public static final ModConfigSpec.IntValue VOLUME_SELF_HEALING_TIME = BUILDER
+            .defineInRange("VOLUME_SELF_HEALING_TIME",50,1, Integer.MAX_VALUE);
+
+    // 检验item名称是否合法
+    private static boolean validateItemName(final Object obj)
+    {
         return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(new ResourceLocation(itemName));
     }
+
+    // 构建配置
+    public static final ModConfigSpec SPEC = BUILDER.pop().build();
+
+    public static float dirty_bandage_ratio;
+    public static float bandage_burn_acc;
+    public static float bandage_internal_acc;
+    public static float bandage_open_wound_acc;
+    public static float burn_bleed_ratio;
+    public static float internal_bleed_ratio;
+    public static float open_wound_bleed_ratio;
+    public static float internal_food_healing;
+    public static float bleed_volume_ratio;
+
+    public static int burn_self_healing_time;
+    public static int internal_self_healing_time;
+    public static int open_wound_self_healing_time;
+    public static int bandage_available_time;
+    public static int volume_self_healing_time;
+
+    @SubscribeEvent
+    static void onLoad(final ModConfigEvent event) {
+        dirty_bandage_ratio = (float) DIRTY_BANDAGE_RATIO.getAsDouble();
+        bandage_burn_acc = (float) BANDAGE_BURN_ACC.getAsDouble();
+        bandage_internal_acc = (float) BANDAGE_INTERNAL_ACC.getAsDouble();
+        bandage_open_wound_acc = (float) BANDAGE_OPEN_WOUND_ACC.getAsDouble();
+        burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();
+        internal_bleed_ratio = (float) INTERNAL_BLEED_RATIO.getAsDouble();
+        open_wound_bleed_ratio = (float) OPEN_WOUND_BLEED_RATIO.getAsDouble();
+        internal_food_healing = (float) INTERNAL_FOOD_HEALING.getAsDouble();
+        bleed_volume_ratio = (float) BLEED_VOLUME_RATIO.getAsDouble();
+
+        burn_self_healing_time = BURN_SELF_HEALING_TIME.getAsInt();
+        internal_self_healing_time = INTERNAL_SELF_HEALING_TIME.getAsInt();
+        open_wound_self_healing_time = OPEN_WOUND_SELF_HEALING_TIME.getAsInt();
+        bandage_available_time = BANDAGE_AVAILABLE_TIME.getAsInt();
+        volume_self_healing_time = VOLUME_SELF_HEALING_TIME.getAsInt();
+    }
+
 }

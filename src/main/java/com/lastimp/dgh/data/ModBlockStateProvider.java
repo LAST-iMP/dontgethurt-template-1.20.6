@@ -11,17 +11,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-//        this.simpleBlockWithItem(ModItems.OPERATING_BED_BLOCK.get(),cubeAll(ModBlocks.RUBY_BLOCK.get()));
-//        this.propertyBlock(ModBlocks.LAMP_BLOCK.get());
-    }
 
-//    public void propertyBlock(Block block){
-//        var block_off = models().cubeAll(&quot;lamp_off&quot;,new ResourceLocation(ExampleMod.MODID,ModelProvider.BLOCK_FOLDER+&quot;/&quot;+&quot;zircon_lamp_off&quot;));
-//        var block_on = models().cubeAll(&quot;lamp_on&quot;,new ResourceLocation(ExampleMod.MODID, ModelProvider.BLOCK_FOLDER+&quot;/&quot;+&quot;zircon_lamp_on&quot;));
-//        getVariantBuilder(block).partialState().with(LampBlock.LIT,true)
-//                .modelForState().modelFile(block_on).addModel()
-//                .partialState().with(LampBlock.LIT,false)
-//                .modelForState().modelFile(block_off).addModel();
-//        simpleBlockItem(block,block_off);
-//    }
+    }
 }

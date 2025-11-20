@@ -39,6 +39,8 @@ public class InjuryHandler {
             handleExplosion(damageAmount, player, event);
         } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
             handleEntityAttack(damageAmount, player, event);
+        } else if (source.is(DamageTypes.INDIRECT_MAGIC) || source.is(DamageTypes.MAGIC)) {
+            handleMagicDamage(damageAmount, player, event);
         } else if (!source.is(DamageTypes.GENERIC_KILL)) {
             handleDefaultDamage(damageAmount, player, event);
         }
@@ -99,6 +101,11 @@ public class InjuryHandler {
             return h;
         });
         event.setAmount(0f);
+    }
+
+    public static void handleMagicDamage(float damageAmount, Player player, LivingHurtEvent event) {
+        handleDefaultDamage(damageAmount / 2, player, event);
+        event.setAmount(damageAmount / 2);
     }
 
     public static void handleDefaultDamage(float damageAmount, Player player, LivingHurtEvent event) {
