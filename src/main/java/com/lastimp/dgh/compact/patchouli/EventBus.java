@@ -1,0 +1,28 @@
+package com.lastimp.dgh.compact.patchouli;
+
+import com.lastimp.dgh.DontGetHurt;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import vazkii.patchouli.api.PatchouliAPI;
+
+@EventBusSubscriber(modid = DontGetHurt.MODID)
+public class EventBus {
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity().level().isClientSide) return;
+        var player = event.getEntity();
+
+        var data = player.getPersistentData();
+        var key = "dgh_has_book";
+
+        if (!data.getBoolean(key)) {
+            ItemStack book = PatchouliAPI.get().getBookStack(new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+            player.getInventory().add(book);
+            data.putBoolean(key, true);
+        }
+    }
+}

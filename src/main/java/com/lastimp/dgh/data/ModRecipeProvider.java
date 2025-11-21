@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -62,5 +63,12 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('c', ModItems.BANDAGE)
                 .unlockedBy("has_bandage", has(ModItems.BANDAGE))
                 .save(recipeOutput);
+
+        var book = PatchouliAPI.get().getBookStack(new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
+                .requires(Items.BOOK, 1)
+                .requires(ModItems.BANDAGE, 1)
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
     }
 }
