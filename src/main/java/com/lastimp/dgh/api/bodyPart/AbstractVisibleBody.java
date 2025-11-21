@@ -1,6 +1,7 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.Config;
+import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
@@ -15,6 +16,7 @@ import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
     private static List<BodyCondition> ANY_BODY_CONDITIONS;
+    private float nextTickBleed;
 
     @Override
     public List<BodyCondition> getBodyConditions() {
@@ -48,7 +50,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     @Override
     public AbstractBody updatePre(PlayerHealthCapability health, Player player) {
         super.updatePre(health, player);
-        this.getCondition(BLEED).setValue(0);
+        this.nextTickBleed = 0;
         return this;
     }
 
@@ -75,16 +77,14 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleCover(BURN, Config.bandage_burn_acc);
 
         if (isBandaged()) return;
-        ConditionState bleed = this.getCondition(BLEED);
-        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(BURN).getValue() * Config.burn_bleed_ratio, BLEED.minValue, BLEED.maxValue));
+        this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
     }
 
     private void handleInternalInjury(PlayerHealthCapability health, Player player) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
         this.handleCover(INTERNAL_INJURY, Config.bandage_internal_acc);
 
-        ConditionState bleed = this.getCondition(BLEED);
-        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio, BLEED.minValue, BLEED.maxValue));
+        this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
 
         float saturation = player.getFoodData().getSaturationLevel();
         float delta = INTERNAL_INJURY.healingSpeed * DELTA;
@@ -102,16 +102,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleCover(OPEN_WOUND, Config.bandage_open_wound_acc);
 
         if (isBandaged()) return;
-        ConditionState bleed = this.getCondition(BLEED);
-        bleed.setValue(bleed.getValue() + Mth.clamp(bleed.getValue() + this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio, BLEED.minValue, BLEED.maxValue));
+        this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
     }
 
     private void handleCover(BodyCondition condition, float acc) {
         ConditionState state = this.getCondition(condition);
 
         if (isBandaged() || isBadBandaged()) {
-            state.setHiddenValue(Mth.clamp(state.getHiddenValue() + state.getValue(), condition.minValue, condition.maxValue));
-            state.setValue(condition.defaultValue);
             state.setHiddenValue(
                     Mth.clamp(state.getHiddenValue() - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc),
                     condition.minValue, condition.maxValue)
@@ -134,9 +131,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     private void handleBleeding(PlayerHealthCapability health) {
-        if (!this.abnormalWithHidden(BLEED)) return;
+        this.getCondition(BLEED).setValue(this.nextTickBleed);
 
-        ConditionState bloodVolume = health.getComponent(BLOOD).getCondition(BLOOD_VOLUME);
-        bloodVolume.setValue(bloodVolume.getValue() - this.getCondition(BLEED).getValue() * DELTA * Config.bleed_volume_ratio);
+        PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);
+        blood.injury(BLOOD_VOLUME, -this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
     }
 }

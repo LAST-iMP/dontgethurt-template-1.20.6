@@ -47,11 +47,11 @@ public enum BodyCondition {
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, String path) {
-        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 20.0f, path);
+        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 10.0f, path);
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, int color, String path) {
-        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 20.0f, color, path);
+        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 10.0f, color, path);
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, String path) {

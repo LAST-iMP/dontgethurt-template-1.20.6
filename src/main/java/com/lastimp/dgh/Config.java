@@ -20,7 +20,7 @@ public class Config {
             .push("general");
 
     public static final ModConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
-            .defineInRange("DIRTY_BANDAGE_RATIO",0.1,0,1);
+            .defineInRange("DIRTY_BANDAGE_RATIO",0.05,0,1);
 
     public static final ModConfigSpec.DoubleValue BANDAGE_BURN_ACC = BUILDER
             .defineInRange("BANDAGE_BURN_ACC",2.0,0,10);
@@ -32,19 +32,19 @@ public class Config {
             .defineInRange("BANDAGE_OPEN_WOUND_ACC",1.3,0,10);
 
     public static final ModConfigSpec.DoubleValue BURN_BLEED_RATIO = BUILDER
-            .defineInRange("BURN_BLEED_RATIO",0.4,0,10);
+            .defineInRange("BURN_BLEED_RATIO",0.6,0,10);
 
     public static final ModConfigSpec.DoubleValue INTERNAL_BLEED_RATIO = BUILDER
-            .defineInRange("INTERNAL_BLEED_RATIO",0.2,0,10);
+            .defineInRange("INTERNAL_BLEED_RATIO",0.4,0,10);
 
     public static final ModConfigSpec.DoubleValue OPEN_WOUND_BLEED_RATIO = BUILDER
-            .defineInRange("OPEN_WOUND_BLEED_RATIO",0.5,0,10);
+            .defineInRange("OPEN_WOUND_BLEED_RATIO",0.8,0,10);
 
     public static final ModConfigSpec.DoubleValue INTERNAL_FOOD_HEALING = BUILDER
             .defineInRange("INTERNAL_FOOD_HEALING",4.0,1.0, Float.MAX_VALUE);
 
     public static final ModConfigSpec.DoubleValue BLEED_VOLUME_RATIO = BUILDER
-            .defineInRange("BLEED_VOLUME_RATIO",0.05,1.0, Float.MAX_VALUE);
+            .defineInRange("BLEED_VOLUME_RATIO",0.03,0, Float.MAX_VALUE);
 
     public static final ModConfigSpec.IntValue BURN_SELF_HEALING_TIME = BUILDER
             .defineInRange("BURN_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);

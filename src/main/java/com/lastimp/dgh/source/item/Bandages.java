@@ -1,14 +1,18 @@
 package com.lastimp.dgh.source.item;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.ConditionState;
+import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class Bandages extends AbstractPartlyHealItem {
@@ -43,8 +47,17 @@ public class Bandages extends AbstractPartlyHealItem {
 
             body.healing(BANDAGED, 0.5f);
             body.setConditionValue(BANDAGED_DIRTY, BANDAGED_DIRTY.defaultValue);
+
+            this.coverCondition(body, BURN);
+            this.coverCondition(body, OPEN_WOUND);
             return true;
         });
+    }
+
+    protected void coverCondition(AbstractBody body, BodyCondition condition) {
+        ConditionState state = body.getCondition(condition);
+        state.setHiddenValue(Mth.clamp(state.getHiddenValue() + state.getValue(), condition.minValue, condition.maxValue));
+        state.setValue(condition.defaultValue);
     }
 
     public static boolean cut(ServerPlayer target, BodyComponents component) {
