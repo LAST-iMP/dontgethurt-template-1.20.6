@@ -14,7 +14,6 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class HealingUpdateHandler {
-    public static final float MAX_HEALTH = 20;
 
     @SubscribeEvent
     public static void onHealingUpdate(PlayerTickEvent.Pre event) {
@@ -33,10 +32,10 @@ public class HealingUpdateHandler {
         ServerPlayer player = (ServerPlayer) event.getEntity();
 
         PlayerHealthCapability health = PlayerHealthCapability.get(player);
-        float maxHealth = MAX_HEALTH * health.getComponent(BLOOD).getConditionValue(BodyCondition.BLOOD_VOLUME);
+        float maxHealth = player.getMaxHealth() * health.getComponent(BLOOD).getConditionValue(BodyCondition.BLOOD_VOLUME);
 
-        if ((int)maxHealth != (int)player.getMaxHealth())
-            player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHealth);
+        if ((int)maxHealth < (int)player.getHealth())
+            player.setHealth(maxHealth);
         if (maxHealth <= 0)
             player.kill();
     }
