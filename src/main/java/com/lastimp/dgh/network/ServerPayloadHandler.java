@@ -27,6 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.network;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.network.message.Network;

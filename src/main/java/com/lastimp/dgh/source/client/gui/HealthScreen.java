@@ -203,7 +203,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        Network.INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
+        Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
                 this.menu.targetPlayer, null, HEALTH_SCANN
         ));
     }

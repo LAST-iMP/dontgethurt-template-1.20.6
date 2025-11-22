@@ -34,7 +34,6 @@ import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -91,7 +90,7 @@ public class BloodScanner extends Item {
         if (!(entity instanceof Player target)) {
             player.sendSystemMessage(Component.literal(entity.getName().getString() + "的血液很正常"));
         } else {
-            Network.INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
+            Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
                             target.getUUID(), null, OperationType.BLOOD_SCANN
                     ));
         }

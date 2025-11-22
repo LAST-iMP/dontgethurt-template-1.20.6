@@ -47,7 +47,7 @@ public class ForgeClientEventHandler {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         if(KeyBinding.OPEN_MENU_KEY.consumeClick()){
-            Network.INSTANCE.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU));
+            Network.SERVER_INSTANCE.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU));
         }
     }
 

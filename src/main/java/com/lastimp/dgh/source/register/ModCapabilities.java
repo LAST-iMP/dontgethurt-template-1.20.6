@@ -50,7 +50,7 @@ public class ModCapabilities {
     }
 
     @SubscribeEvent
-    public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "health"), new PlayerHealthProvider());
         }

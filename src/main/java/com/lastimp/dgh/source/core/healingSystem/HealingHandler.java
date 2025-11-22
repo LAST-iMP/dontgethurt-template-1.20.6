@@ -43,7 +43,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -51,13 +50,13 @@ public class HealingHandler {
     private static HealthScreen healthScreen = null;
 
     @SubscribeEvent
-    public static void onScannerHealing(ScreenEvent.MouseButtonPressed.Pre event) {
+    public static void onScannerHealing(ScreenEvent.MouseButtonPressed event) {
         if (event.getButton() != 1) return;
         if (!screenHealingCheck()) return;
 
         assert healthScreen.getSlotUnderMouse() != null;
         int index = healthScreen.getSlotUnderMouse().getSlotIndex();
-        Network.INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
+        Network.SERVER_INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
                         healthScreen.getMenu().targetPlayer, index, healthScreen.getSelectedComponent()
                 ));
         event.setCanceled(true);

@@ -77,7 +77,7 @@ public class Config {
             .defineInRange("OPEN_WOUND_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
 
     public static final ForgeConfigSpec.IntValue BANDAGE_AVAILABLE_TIME = BUILDER
-            .defineInRange("BANDAGE_AVAILABLE_TIME",100,1, Integer.MAX_VALUE);
+            .defineInRange("BANDAGE_AVAILABLE_TIME",200,1, Integer.MAX_VALUE);
 
     public static final ForgeConfigSpec.IntValue VOLUME_SELF_HEALING_TIME = BUILDER
             .defineInRange("VOLUME_SELF_HEALING_TIME",50,1, Integer.MAX_VALUE);

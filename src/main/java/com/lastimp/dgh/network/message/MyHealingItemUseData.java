@@ -73,7 +73,6 @@ public class MyHealingItemUseData {
         ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
         BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
 
-        DontGetHurt.LOGGER.info(sourcePlayer.getScoreboardName() + " using: " + stack.getItem().toString());
         HealingHandler.useItemOn(stack, sourcePlayer, target, component);
     }
 

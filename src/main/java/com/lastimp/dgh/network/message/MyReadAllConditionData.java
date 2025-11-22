@@ -27,9 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.network.message;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.network.ClientPayloadHandler;
-import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.source.item.BloodScanner;
@@ -87,7 +85,7 @@ public class MyReadAllConditionData {
         ServerPlayer targetPlayer = (ServerPlayer) context.getSender().level().getPlayerByUUID(uuid);
         PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
 
-        Network.INSTANCE.send(
+        Network.CLIENT_INSTANCE.send(
                 PacketDistributor.PLAYER.with(context::getSender),
                 MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
         );
