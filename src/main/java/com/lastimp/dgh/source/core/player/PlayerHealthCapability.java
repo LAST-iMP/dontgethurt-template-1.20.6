@@ -44,7 +44,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
 
     public static PlayerHealthCapability get(Player player) {
-        return player.getCapability(ModCapabilities.PLAYER_HEALTH).resolve().get();
+        return player.getCapability(ModCapabilities.PLAYER_HEALTH).orElse(new PlayerHealthCapability());
     }
 
     public static void set(Player player, PlayerHealthCapability capability) {

@@ -51,7 +51,7 @@ import com.mojang.logging.LogUtils;
 public class DontGetHurt
 {
     public static final String MODID = "dgh";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final float DELTA = 0.05f;
     public static final float EPS = 0.0001f;
 
@@ -85,6 +85,7 @@ public class DontGetHurt
 
         @SubscribeEvent
         static void onClientSetup(FMLClientSetupEvent event) {
+            LOGGER.info("Menu rege");
             event.enqueueWork(
                     () -> MenuScreens.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new)
             );

@@ -27,6 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.client.gui;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,6 +44,7 @@ public class HealthMenu extends AbstractContainerMenu {
 
     public HealthMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
         this(pContainerId, inv, buf.readUUID(), buf.readBoolean());
+        DontGetHurt.LOGGER.info("Client Side Menu");
     }
 
     public HealthMenu(int pContainerId, Inventory inv, UUID targetPlayer, boolean isDevice) {
@@ -50,6 +52,7 @@ public class HealthMenu extends AbstractContainerMenu {
         this.targetPlayer = targetPlayer;
         this.isDevice = isDevice;
         layoutPlayerInventorySlots(inv);
+        DontGetHurt.LOGGER.info("Server Side Menu");
     }
 
     @Override
