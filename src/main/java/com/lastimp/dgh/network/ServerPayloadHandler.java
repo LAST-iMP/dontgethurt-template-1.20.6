@@ -29,6 +29,7 @@ package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -39,28 +40,27 @@ import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ServerPayloadHandler {
 
-    public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
+    public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
+        var context = ctx.get();
         context.enqueueWork(() -> {
                     UUID uuid = new UUID(data.id_most(), data.id_least());
-                    ServerPlayer targetPlayer = (ServerPlayer) context.player().level().getPlayerByUUID(uuid);
+                    ServerPlayer targetPlayer = (ServerPlayer) context.getSender().level().getPlayerByUUID(uuid);
                     PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
 
-                    PacketDistributor.sendToPlayer(
-                            (ServerPlayer) context.player(),
-                            MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()), context.player().registryAccess())
+                    Network.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(context::getSender),
+                            MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
                     );
-                })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
                 });
+        context.setPacketHandled(true);
     }
 
     public static void handleClientPress(final MyKeyPressedData data, final IPayloadContext context) {

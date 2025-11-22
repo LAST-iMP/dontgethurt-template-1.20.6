@@ -32,28 +32,29 @@ import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.BloodScanner;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ClientPayloadHandler {
     private static HealthScreen healthScreen = null;
 
-    public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
+    public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
+        var context = ctx.get();
         context.enqueueWork(() -> {
-                    PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
+                    PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
                     OperationType operation = OperationType.valueOf(data.oper());
                     if (operation == OperationType.HEALTH_SCANN && healthScreen != null) {
                         healthScreen.setHealthData(health);
                     } else if (operation == OperationType.BLOOD_SCANN) {
                         UUID uuid = new UUID(data.id_most(), data.id_least());
-                        BloodScanner.scanHealth(context.player(), health, context.player().level().getPlayerByUUID(uuid).getScoreboardName());
+                        BloodScanner.scanHealth(Minecraft.getInstance().player, health, Minecraft.getInstance().level.getPlayerByUUID(uuid).getScoreboardName());
                     }
-                })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
                 });
+        context.setPacketHandled(true);
     }
 
     public static HealthScreen getHealthScreen() {

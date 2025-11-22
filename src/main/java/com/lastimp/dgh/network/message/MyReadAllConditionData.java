@@ -28,50 +28,81 @@ SOFTWARE.
 package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.network.ClientPayloadHandler;
+import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public record MyReadAllConditionData(long id_most, long id_least, CompoundTag tag, String oper) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<MyReadAllConditionData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_read_all_condition"));
+public class MyReadAllConditionData implements CustomPacketPayload {
+    private long id_most;
+    private long id_least;
+    private CompoundTag tag;
+    private String oper;
 
-    public static final StreamCodec<ByteBuf, MyReadAllConditionData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_LONG,
-            MyReadAllConditionData::id_most,
-            ByteBufCodecs.VAR_LONG,
-            MyReadAllConditionData::id_least,
-            ByteBufCodecs.COMPOUND_TAG,
-            MyReadAllConditionData::tag,
-            ByteBufCodecs.STRING_UTF8,
-            MyReadAllConditionData::oper,
-            MyReadAllConditionData::new
-    );
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public MyReadAllConditionData(FriendlyByteBuf buffer) {
+        this.id_most = buffer.readLong();
+        this.id_least = buffer.readLong();
+        this.tag = buffer.readNbt();
+        this.oper = buffer.readUtf();
     }
 
-    public static MyReadAllConditionData getInstance(UUID uuid, PlayerHealthCapability health, OperationType operation, HolderLookup.Provider provider) {
-        return new MyReadAllConditionData(
-                uuid.getMostSignificantBits(),
-                uuid.getLeastSignificantBits(),
-                health == null ? new CompoundTag() : health.serializeNBT(provider),
-                operation.toString()
-        );
+    public MyReadAllConditionData(UUID uuid, PlayerHealthCapability health, OperationType operation) {
+        this.id_most = uuid.getMostSignificantBits();
+        this.id_least = uuid.getLeastSignificantBits();
+        this.tag = health.serializeNBT();
+        this.oper = operation.name();
     }
 
-    public static PlayerHealthCapability getHealthFromInstance(CompoundTag tag, HolderLookup.Provider provider) {
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeLong(this.id_most);
+        buf.writeLong(this.id_least);
+        buf.writeNbt(this.tag);
+        buf.writeUtf(this.oper);
+    }
+
+    public void handlerClient(Supplier<NetworkEvent.Context> ctx) {
+        ClientPayloadHandler.handleReadAllConditionData(this, ctx);
+    }
+
+    public void handlerServer(Supplier<NetworkEvent.Context> ctx) {
+        ServerPayloadHandler.handleReadAllConditionData(this, ctx);
+    }
+
+
+    public static MyReadAllConditionData getInstance(UUID uuid, PlayerHealthCapability health, OperationType operation) {
+        return new MyReadAllConditionData(uuid, health, operation);
+    }
+
+    public static PlayerHealthCapability getHealthFromInstance(CompoundTag tag) {
         PlayerHealthCapability health = new PlayerHealthCapability();
-        health.deserializeNBT(provider, tag);
+        health.deserializeNBT(tag);
         return health;
+    }
+
+    public long id_least() {
+        return id_least;
+    }
+
+    public long id_most() {
+        return id_most;
+    }
+
+    public String oper() {
+        return oper;
+    }
+
+    public CompoundTag tag() {
+        return tag;
     }
 }
