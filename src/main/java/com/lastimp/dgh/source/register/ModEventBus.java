@@ -45,12 +45,12 @@ public class ModEventBus {
         ModCapabilities.register(event);
     }
 
-    @SubscribeEvent
-    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(
-                Registries.DAMAGE_TYPE,
-                DamageType.CODEC,
-                DamageType.CODEC
-        );
-    }
+//    @SubscribeEvent
+//    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+//        event.dataPackRegistry(
+//                Registries.DAMAGE_TYPE,
+//                DamageType.CODEC,
+//                DamageType.CODEC
+//        );
+//    }
 }
