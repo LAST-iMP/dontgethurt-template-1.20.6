@@ -27,12 +27,14 @@ SOFTWARE.
 
 package com.lastimp.dgh.network.message;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
@@ -54,7 +56,7 @@ public class MyReadAllConditionData {
     public MyReadAllConditionData(UUID uuid, PlayerHealthCapability health, OperationType operation) {
         this.id_most = uuid.getMostSignificantBits();
         this.id_least = uuid.getLeastSignificantBits();
-        this.tag = health.serializeNBT();
+        this.tag = health != null ? health.serializeNBT() : new CompoundTag();
         this.oper = operation.name();
     }
 

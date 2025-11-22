@@ -34,7 +34,10 @@ import com.lastimp.dgh.source.item.BloodScanner;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -45,15 +48,17 @@ public class ClientPayloadHandler {
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         context.enqueueWork(() -> {
-                    PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
-                    OperationType operation = OperationType.valueOf(data.oper());
-                    if (operation == OperationType.HEALTH_SCANN && healthScreen != null) {
-                        healthScreen.setHealthData(health);
-                    } else if (operation == OperationType.BLOOD_SCANN) {
-                        UUID uuid = new UUID(data.id_most(), data.id_least());
-                        BloodScanner.scanHealth(Minecraft.getInstance().player, health, Minecraft.getInstance().level.getPlayerByUUID(uuid).getScoreboardName());
-                    }
-                });
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
+                OperationType operation = OperationType.valueOf(data.oper());
+                if (operation == OperationType.HEALTH_SCANN && healthScreen != null) {
+                    healthScreen.setHealthData(health);
+                } else if (operation == OperationType.BLOOD_SCANN) {
+                    UUID uuid = new UUID(data.id_most(), data.id_least());
+                    BloodScanner.scanHealth(Minecraft.getInstance().player, health, Minecraft.getInstance().level.getPlayerByUUID(uuid).getScoreboardName());
+                }
+            });
+        });
         context.setPacketHandled(true);
     }
 
