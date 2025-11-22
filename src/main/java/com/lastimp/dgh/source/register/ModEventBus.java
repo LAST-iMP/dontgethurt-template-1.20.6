@@ -25,61 +25,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.lastimp.dgh.source.Register;
+package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.tags.DamageTag;
-import com.lastimp.dgh.source.core.player.PlayerHealthProvider;
-import com.lastimp.dgh.network.ClientPayloadHandler;
-import com.lastimp.dgh.network.message.MyHealingItemUseData;
-import com.lastimp.dgh.network.message.MyKeyPressedData;
-import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.network.ServerPayloadHandler;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEventBus {
 
     @SubscribeEvent
-    public static void registerCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         ModCapabilities.register(event);
-    }
-
-    @SubscribeEvent
-    public static void registerNetwork(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(DontGetHurt.MODID);
-        registrar.playBidirectional(
-                MyReadAllConditionData.TYPE,
-                MyReadAllConditionData.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        ClientPayloadHandler::handleReadAllConditionData,
-                        ServerPayloadHandler::handleReadAllConditionData
-                )
-        );
-        registrar.playToServer(
-                MyHealingItemUseData.TYPE,
-                MyHealingItemUseData.STREAM_CODEC,
-                ServerPayloadHandler::handleHealingItemUsageData
-        );
-        registrar.playToServer(
-                MyKeyPressedData.TYPE,
-                MyKeyPressedData.STREAM_CODEC,
-                ServerPayloadHandler::handleClientPress
-        );
     }
 
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(
-                DamageTag.BLUNT_TRAUMA_DAMAGE,
-                DamageType.DIRECT_CODEC,
-                DamageType.DIRECT_CODEC
+                Registries.DAMAGE_TYPE,
+                DamageType.CODEC,
+                DamageType.CODEC
         );
     }
 }

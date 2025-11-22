@@ -68,9 +68,7 @@ public class HealthConditionWidget extends AbstractWidget {
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp(this.getX() + filled, this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, fgColor);
 
         // draw icon from texture (if you want to use atlas, supply proper tex size)
-        guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
-        guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
-//        guiGraphics.blitSprite(texture, 100, 32, 0, 0, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
+        guiGraphics.blit(texture, this.getX() + 2, this.getY() + 2, 0, 0, 0, iconSize, iconSize, 32, 32);
 
 
         int stringColor = 0xFF000000;

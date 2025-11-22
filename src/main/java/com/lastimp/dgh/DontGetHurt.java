@@ -27,10 +27,10 @@ SOFTWARE.
 
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.source.Register.ModCapabilities;
-import com.lastimp.dgh.source.Register.ModCreativeModTabs;
-import com.lastimp.dgh.source.Register.ModItems;
-import com.lastimp.dgh.source.Register.ModMenus;
+import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.register.ModCreativeModTabs;
+import com.lastimp.dgh.source.register.ModItems;
+import com.lastimp.dgh.source.register.ModMenus;
 import com.lastimp.dgh.source.client.gui.HealthScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -62,7 +62,6 @@ public class DontGetHurt
         ModItems.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);
-        ModCapabilities.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -72,6 +71,7 @@ public class DontGetHurt
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
+        Network.registerMessage();
     }
 
     @SubscribeEvent

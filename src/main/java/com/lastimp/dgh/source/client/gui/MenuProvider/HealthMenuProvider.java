@@ -48,10 +48,7 @@ public class HealthMenuProvider implements MenuProvider {
     }
 
     public static void open(Player player, UUID targetPlayer, boolean isDevice) {
-        player.openMenu(new HealthMenuProvider(targetPlayer, isDevice), buf -> {
-            buf.writeUUID(targetPlayer);
-            buf.writeBoolean(isDevice);
-        });
+        player.openMenu(new HealthMenuProvider(targetPlayer, isDevice));
     }
 
     @Override

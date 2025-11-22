@@ -27,24 +27,18 @@ SOFTWARE.
 
 package com.lastimp.dgh.network.message;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class MyReadAllConditionData implements CustomPacketPayload {
+public class MyReadAllConditionData {
     private long id_most;
     private long id_least;
     private CompoundTag tag;

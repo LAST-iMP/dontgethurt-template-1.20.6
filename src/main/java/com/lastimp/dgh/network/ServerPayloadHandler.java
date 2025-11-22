@@ -63,34 +63,29 @@ public class ServerPayloadHandler {
         context.setPacketHandled(true);
     }
 
-    public static void handleClientPress(final MyKeyPressedData data, final IPayloadContext context) {
+    public static void handleClientPress(final MyKeyPressedData data, final Supplier<NetworkEvent.Context> ctx) {
+        var context = ctx.get();
         context.enqueueWork(() -> {
                     KeyPressedType key = KeyPressedType.valueOf(data.key());
-                    ServerPlayer player = (ServerPlayer) context.player();
+                    ServerPlayer player = context.getSender();
                     if (key == KeyPressedType.KEY_HEALTH_MENU) {
                         HealthMenuProvider.open(player, player.getUUID(), false);
                     }
-                })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
                 });
-
+        context.setPacketHandled(true);
     }
 
-    public static void handleHealingItemUsageData(final MyHealingItemUseData data, final IPayloadContext context) {
+    public static void handleHealingItemUsageData(final MyHealingItemUseData data, Supplier<NetworkEvent.Context> ctx) {
+        var context = ctx.get();
         context.enqueueWork(() -> {
-                    ServerPlayer sourcePlayer = (ServerPlayer) context.player();
+                    ServerPlayer sourcePlayer = context.getSender();
                     UUID targetID = new UUID(data.id_most(), data.id_least());
                     ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
                     ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
                     BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
 
                     HealingHandler.useItemOn(stack, sourcePlayer, target, component);
-        })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
-                });
+        });
+        context.setPacketHandled(true);
     }
 }

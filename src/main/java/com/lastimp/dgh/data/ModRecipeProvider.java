@@ -28,8 +28,7 @@ SOFTWARE.
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.Register.ModItems;
-import net.minecraft.core.HolderLookup;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +36,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import vazkii.patchouli.api.PatchouliAPI;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider {
@@ -93,7 +91,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book.getItem())
                 .requires(Items.BOOK, 1)
                 .requires(ModItems.BANDAGE.get(), 1)
                 .unlockedBy("has_book", has(Items.BOOK))

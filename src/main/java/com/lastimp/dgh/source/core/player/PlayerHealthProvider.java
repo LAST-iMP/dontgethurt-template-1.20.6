@@ -28,17 +28,12 @@ SOFTWARE.
 package com.lastimp.dgh.source.core.player;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.Register.ModCapabilities;
+import com.lastimp.dgh.source.register.ModCapabilities;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

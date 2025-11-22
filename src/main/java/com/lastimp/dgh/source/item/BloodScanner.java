@@ -30,6 +30,7 @@ package com.lastimp.dgh.source.item;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
@@ -43,7 +44,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -91,9 +91,9 @@ public class BloodScanner extends Item {
         if (!(entity instanceof Player target)) {
             player.sendSystemMessage(Component.literal(entity.getName().getString() + "的血液很正常"));
         } else {
-            PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                    target.getUUID(), null, OperationType.BLOOD_SCANN, Minecraft.getInstance().player.registryAccess()
-            ));
+            Network.INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
+                            target.getUUID(), null, OperationType.BLOOD_SCANN
+                    ));
         }
     }
 

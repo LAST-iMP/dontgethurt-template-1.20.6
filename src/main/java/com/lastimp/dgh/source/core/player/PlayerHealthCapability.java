@@ -29,12 +29,10 @@ SOFTWARE.
 package com.lastimp.dgh.source.core.player;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.source.Register.ModCapabilities;
+import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 

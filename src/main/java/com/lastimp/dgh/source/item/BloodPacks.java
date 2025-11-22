@@ -27,7 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.item;
 
-import com.lastimp.dgh.source.Register.ModItems;
+import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;

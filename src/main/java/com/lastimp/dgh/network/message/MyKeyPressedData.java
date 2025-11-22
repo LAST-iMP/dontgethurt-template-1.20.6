@@ -30,24 +30,42 @@ package com.lastimp.dgh.network.message;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.KeyPressedType;
+import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.network.ClientPayloadHandler;
+import com.lastimp.dgh.network.ServerPayloadHandler;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkEvent;
 
-public record MyKeyPressedData (String key) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<MyKeyPressedData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_key_press_data"));
+import java.util.UUID;
+import java.util.function.Supplier;
 
-    public static final StreamCodec<ByteBuf, MyKeyPressedData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8,
-            MyKeyPressedData::key,
-            MyKeyPressedData::new
-    );
+public class MyKeyPressedData {
+    private String key;
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public MyKeyPressedData(FriendlyByteBuf buffer) {
+        this.key = buffer.readUtf();
+    }
+
+    public MyKeyPressedData(String key) {
+        this.key = key;
+    }
+
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeUtf(this.key);
+    }
+
+    public void handlerServer(Supplier<NetworkEvent.Context> ctx) {
+        ServerPayloadHandler.handleClientPress(this, ctx);
     }
 
     public static MyKeyPressedData getInstance(KeyPressedType key) {
         return new MyKeyPressedData(key.name());
+    }
+
+    public String key() {
+        return key;
     }
 }

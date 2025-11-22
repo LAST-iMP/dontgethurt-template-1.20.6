@@ -42,22 +42,15 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 public class HealingUpdateHandler {
 
     @SubscribeEvent
-    public static void onHealingUpdate(TickEvent.PlayerTickEvent.Pre event) {
-        if (event.getEntity().level().isClientSide) return;
+    public static void onHealingUpdate(TickEvent.PlayerTickEvent event) {
+        if (event.side.isClient()) return;
 
-        ServerPlayer player = (ServerPlayer) event.getEntity();
-        PlayerHealthCapability.getAndSet(player, health -> {
-            health = health.update(player);
-            return health;
+        ServerPlayer player = (ServerPlayer) event.player;
+        PlayerHealthCapability health = PlayerHealthCapability.getAndSet(player, h -> {
+            h = h.update(player);
+            return h;
         });
-    }
 
-    @SubscribeEvent
-    public static void onHealingUpdate(TickEvent.PlayerTickEvent.Post event) {
-        if (event.getEntity().level().isClientSide) return;
-        ServerPlayer player = (ServerPlayer) event.getEntity();
-
-        PlayerHealthCapability health = PlayerHealthCapability.get(player);
         float maxHealth = player.getMaxHealth() * health.getComponent(BLOOD).getConditionValue(BodyCondition.BLOOD_VOLUME);
 
         if ((int)maxHealth < (int)player.getHealth())

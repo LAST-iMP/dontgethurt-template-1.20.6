@@ -28,6 +28,7 @@ SOFTWARE.
 package com.lastimp.dgh.source.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -202,8 +203,8 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
+        Network.INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
+                this.menu.targetPlayer, null, HEALTH_SCANN
         ));
     }
 

@@ -32,6 +32,7 @@ import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.HealthScreen;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.item.Bandages;
@@ -56,9 +57,9 @@ public class HealingHandler {
 
         assert healthScreen.getSlotUnderMouse() != null;
         int index = healthScreen.getSlotUnderMouse().getSlotIndex();
-        PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
-                healthScreen.getMenu().targetPlayer, index, healthScreen.getSelectedComponent()
-        ));
+        Network.INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
+                        healthScreen.getMenu().targetPlayer, index, healthScreen.getSelectedComponent()
+                ));
         event.setCanceled(true);
     }
 
@@ -96,7 +97,7 @@ public class HealingHandler {
             consume = item.heal(source, target, component);
         }
         if (consume) {
-            itemStack.consume(1, target);
+            itemStack.shrink(1);
         }
     }
 

@@ -29,7 +29,8 @@ package com.lastimp.dgh.source.client.eventHandler;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.KeyPressedType;
-import com.lastimp.dgh.source.Register.ModCapabilities;
+import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -39,15 +40,14 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 
-@Mod.EventBusSubscriber(modid = DontGetHurt.MODID,value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class ForgeClientEventHandler {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         if(KeyBinding.OPEN_MENU_KEY.consumeClick()){
-            PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU));
+            Network.INSTANCE.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU));
         }
     }
 

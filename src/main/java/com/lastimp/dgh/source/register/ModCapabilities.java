@@ -25,25 +25,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.lastimp.dgh.source.Register;
+package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.source.core.player.PlayerHealthProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 public class ModCapabilities {
     public static final Capability<PlayerHealthCapability> PLAYER_HEALTH = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public static void register(AttachCapabilitiesEvent<Entity> event) {
-        if (!(event.getObject() instanceof Player player)) return;
-        event.addCapability(
-                PlayerHealthProvider.ID,
-                new PlayerHealthProvider()
-        );
+    public static void register(RegisterCapabilitiesEvent event) {
+        event.register(PlayerHealthCapability.class);
     }
 }

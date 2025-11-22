@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.lastimp.dgh.source.Register;
+package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.block.OperatingBedBlock;

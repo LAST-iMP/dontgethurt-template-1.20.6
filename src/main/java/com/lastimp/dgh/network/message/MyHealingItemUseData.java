@@ -27,40 +27,65 @@ SOFTWARE.
 
 package com.lastimp.dgh.network.message;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import com.lastimp.dgh.network.ServerPayloadHandler;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public record MyHealingItemUseData (long id_most, long id_least, int slotNum, String component) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<MyHealingItemUseData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_healing_item_use_data"));
+public class MyHealingItemUseData {
+    private long id_most;
+    private long id_least;
+    private int slotNum;
+    private String component;
 
-    public static final StreamCodec<ByteBuf, MyHealingItemUseData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_LONG,
-            MyHealingItemUseData::id_most,
-            ByteBufCodecs.VAR_LONG,
-            MyHealingItemUseData::id_least,
-            ByteBufCodecs.VAR_INT,
-            MyHealingItemUseData::slotNum,
-            ByteBufCodecs.STRING_UTF8,
-            MyHealingItemUseData::component,
-            MyHealingItemUseData::new
-    );
+    public MyHealingItemUseData(FriendlyByteBuf buffer) {
+        this.id_most = buffer.readLong();
+        this.id_least = buffer.readLong();
+        this.slotNum = buffer.readInt();
+        this.component = buffer.readUtf();
+    }
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public MyHealingItemUseData(UUID uuid, int slotNum, String components) {
+        this.id_most = uuid.getMostSignificantBits();
+        this.id_least = uuid.getLeastSignificantBits();
+        this.slotNum = slotNum;
+        this.component = components;
+    }
+
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeLong(this.id_most);
+        buf.writeLong(this.id_least);
+        buf.writeInt(this.slotNum);
+        buf.writeUtf(this.component);
+    }
+
+    public void handlerServer(Supplier<NetworkEvent.Context> ctx) {
+        ServerPayloadHandler.handleHealingItemUsageData(this, ctx);
     }
 
     public static MyHealingItemUseData getInstance(UUID targetId, int slotNum, BodyComponents components) {
         if (components == null)
-            return new MyHealingItemUseData(targetId.getMostSignificantBits(), targetId.getLeastSignificantBits(), slotNum, "NONE");
+            return new MyHealingItemUseData(targetId, slotNum, "NONE");
         else
-            return new MyHealingItemUseData(targetId.getMostSignificantBits(), targetId.getLeastSignificantBits(), slotNum, components.name());
+            return new MyHealingItemUseData(targetId, slotNum, components.name());
+    }
+
+    public String component() {
+        return component;
+    }
+
+    public long id_least() {
+        return id_least;
+    }
+
+    public long id_most() {
+        return id_most;
+    }
+
+    public int slotNum() {
+        return slotNum;
     }
 }
