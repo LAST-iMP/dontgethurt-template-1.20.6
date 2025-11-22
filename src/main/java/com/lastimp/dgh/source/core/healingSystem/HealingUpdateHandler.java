@@ -31,19 +31,18 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 
-@EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
+@Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class HealingUpdateHandler {
 
     @SubscribeEvent
-    public static void onHealingUpdate(PlayerTickEvent.Pre event) {
+    public static void onHealingUpdate(TickEvent.PlayerTickEvent.Pre event) {
         if (event.getEntity().level().isClientSide) return;
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
@@ -54,7 +53,7 @@ public class HealingUpdateHandler {
     }
 
     @SubscribeEvent
-    public static void onHealingUpdate(PlayerTickEvent.Post event) {
+    public static void onHealingUpdate(TickEvent.PlayerTickEvent.Post event) {
         if (event.getEntity().level().isClientSide) return;
         ServerPlayer player = (ServerPlayer) event.getEntity();
 

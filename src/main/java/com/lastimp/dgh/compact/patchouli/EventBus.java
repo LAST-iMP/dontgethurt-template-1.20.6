@@ -30,12 +30,12 @@ package com.lastimp.dgh.compact.patchouli;
 import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import vazkii.patchouli.api.PatchouliAPI;
 
-@EventBusSubscriber(modid = DontGetHurt.MODID)
+@Mod.EventBusSubscriber(modid = DontGetHurt.MODID)
 public class EventBus {
 
     @SubscribeEvent

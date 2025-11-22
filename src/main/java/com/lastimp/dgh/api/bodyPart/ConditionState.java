@@ -30,7 +30,7 @@ package com.lastimp.dgh.api.bodyPart;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class ConditionState implements INBTSerializable<CompoundTag> {
@@ -134,7 +134,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("isInjury", this.isInjury);
         tag.putFloat("lastDisplayValue", this.lastDisplayValue);
@@ -147,7 +147,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+    public void deserializeNBT(CompoundTag tag) {
         this.build(
                 tag.getBoolean("isInjury"),
                 tag.getFloat("lastDisplayValue"),

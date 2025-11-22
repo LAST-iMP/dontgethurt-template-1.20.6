@@ -27,6 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.Register;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.block.OperatingBedBlock;
 import com.lastimp.dgh.source.item.*;
 import com.lastimp.dgh.source.item.BloodScanner;
@@ -35,81 +36,91 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import static com.lastimp.dgh.DontGetHurt.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModItems {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DontGetHurt.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DontGetHurt.MODID);
 
-    public static final DeferredBlock<Block> OPERATING_BED_BLOCK = BLOCKS.registerBlock(
+    public static final RegistryObject<Block> OPERATING_BED_BLOCK = BLOCKS.register(
             "operating_bed",
-            OperatingBedBlock::new,
-            BlockBehaviour.Properties.ofFullCopy(Blocks.RED_BED)
+            () -> new OperatingBedBlock(
+                    BlockBehaviour.Properties.copy(Blocks.RED_BED.defaultBlockState().getBlock())
+            )
     );
 
-    public static final DeferredItem<BlockItem> OPERATING_BED_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
+    public static final RegistryObject<BlockItem> OPERATING_BED_BLOCK_ITEM = ITEMS.register(
             "operating_bed",
-            OPERATING_BED_BLOCK,
-            new Item.Properties()
-                    .stacksTo(1)
+            () -> new OperatingBedItem(
+                    OPERATING_BED_BLOCK.get(),
+                    new Item.Properties()
+                            .stacksTo(1)
+            )
     );
 
-    public static final DeferredItem<Item> HEALTH_SCANNER = ITEMS.registerItem(
+    public static final RegistryObject<Item> HEALTH_SCANNER = ITEMS.register(
             "health_scanner",
-            HealthScanner::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            () -> new HealthScanner(
+                    new Item.Properties()
+                            .stacksTo(1)
+            )
     );
 
-    public static final DeferredItem<Item> BLOOD_PACK = ITEMS.registerItem(
+    public static final RegistryObject<Item> BLOOD_PACK = ITEMS.register(
             "blood_pack",
-            BloodPacks::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            () -> new BloodPacks(
+                    new Item.Properties()
+                            .stacksTo(16)
+            )
     );
 
-    public static final DeferredItem<Item> BLOOD_PACK_EMPTY = ITEMS.registerItem(
+    public static final RegistryObject<Item> BLOOD_PACK_EMPTY = ITEMS.register(
             "blood_pack_empty",
-            BloodPacksEmpty::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            () -> new BloodPacksEmpty(
+                    new Item.Properties()
+                            .stacksTo(16)
+            )
     );
 
-    public static final DeferredItem<BloodScanner> BLOOD_SCANNER = ITEMS.registerItem(
+    public static final RegistryObject<BloodScanner> BLOOD_SCANNER = ITEMS.register(
             "blood_scanner",
-            BloodScanner::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            () -> new BloodScanner(
+                    new Item.Properties()
+                            .stacksTo(1)
+            )
     );
 
-    public static final DeferredItem<Bandages> BANDAGE = ITEMS.registerItem(
+    public static final RegistryObject<Bandages> BANDAGE = ITEMS.register(
             "bandage",
-            Bandages::new,
-            new Item.Properties()
-                    .stacksTo(64)
+            () -> new Bandages(
+                    new Item.Properties()
+                            .stacksTo(64)
+            )
     );
 
-    public static final DeferredItem<Morphine> MORPHINE = ITEMS.registerItem(
+    public static final RegistryObject<Morphine> MORPHINE = ITEMS.register(
             "morphine",
-            Morphine::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            () -> new Morphine(
+                    new Item.Properties()
+                            .stacksTo(16)
+            )
     );
 
-    public static final DeferredItem<Sutures> SUTURE = ITEMS.registerItem(
+    public static final RegistryObject<Sutures> SUTURE = ITEMS.register(
             "suture",
-            Sutures::new,
-            new Item.Properties()
-                    .stacksTo(64)
+            () -> new Sutures(
+                    new Item.Properties()
+                            .stacksTo(64)
+            )
     );
 
     public static void register(IEventBus eventBus) {

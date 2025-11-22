@@ -30,12 +30,13 @@ package com.lastimp.dgh.source.Register;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.client.gui.HealthMenu;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.network.IContainerFactory;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.network.IContainerFactory;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
@@ -45,7 +46,7 @@ public class ModMenus {
     public static final Supplier<MenuType<HealthMenu>> HEALTH_MENU = registerMenuType(HealthMenu::new, "health_menu");
 
     private static <T extends AbstractContainerMenu> Supplier<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
-        return MENU_TYPES.register(name, () -> IMenuTypeExtension.create(factory));
+        return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));
     }
 
     public static void register(IEventBus eventBus){

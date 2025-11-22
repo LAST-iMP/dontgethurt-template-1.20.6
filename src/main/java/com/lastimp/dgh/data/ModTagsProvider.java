@@ -35,13 +35,13 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ModTagsProvider extends TagsProvider<Item> {
-    public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, new ResourceLocation("minecraft", "shears"));
+    public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("minecraft", "shears"));
 
     protected ModTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.ITEM, lookupProvider, modId, existingFileHelper);

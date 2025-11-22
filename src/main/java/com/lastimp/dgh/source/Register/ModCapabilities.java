@@ -27,31 +27,23 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.Register;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.capabilities.EntityCapability;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-
-import java.util.function.Supplier;
+import com.lastimp.dgh.source.core.player.PlayerHealthProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 public class ModCapabilities {
-    public static final EntityCapability<PlayerHealthCapability, Void> PLAYER_HEALTH_HANDLER =
-            EntityCapability.createVoid(
-                    new ResourceLocation(DontGetHurt.MODID, "player_health_handler"),
-                    PlayerHealthCapability.class
-            );
+    public static final Capability<PlayerHealthCapability> PLAYER_HEALTH = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
-            DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, DontGetHurt.MODID);
-
-    public static final Supplier<AttachmentType<PlayerHealthCapability>> PLAYER_HEALTH =
-            ATTACHMENT_TYPES.register("player_health", () -> AttachmentType.serializable(PlayerHealthCapability::new).build());
-
-    public static void register(IEventBus eventBus) {
-        ATTACHMENT_TYPES.register(eventBus);
+    public static void register(AttachCapabilitiesEvent<Entity> event) {
+        if (!(event.getObject() instanceof Player player)) return;
+        event.addCapability(
+                PlayerHealthProvider.ID,
+                new PlayerHealthProvider()
+        );
     }
 }

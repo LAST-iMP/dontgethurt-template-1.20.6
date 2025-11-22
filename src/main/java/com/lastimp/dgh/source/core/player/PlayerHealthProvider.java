@@ -27,30 +27,41 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.core.player;
 
+import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.source.Register.ModCapabilities;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PlayerHealthProvider implements ICapabilityProvider<Player, Void, PlayerHealthCapability>, INBTSerializable<CompoundTag> {
+public class PlayerHealthProvider implements ICapabilitySerializable<CompoundTag> {
     private final PlayerHealthCapability impl = new PlayerHealthCapability();
+    private final LazyOptional<PlayerHealthCapability> optional = LazyOptional.of(() -> impl);
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "player_health_handler");
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        return impl.serializeNBT(provider);
+    public CompoundTag serializeNBT() {
+        return impl.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        impl.deserializeNBT(provider, nbt);
+    public void deserializeNBT(CompoundTag nbt) {
+        impl.deserializeNBT(nbt);
     }
 
     @Override
-    public @Nullable PlayerHealthCapability getCapability(Player o, Void unused) {
-        this.impl.player = (ServerPlayer) o;
-        return this.impl;
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (cap == ModCapabilities.PLAYER_HEALTH) {
+            return optional.cast();
+        }
+        return LazyOptional.empty();
     }
 }

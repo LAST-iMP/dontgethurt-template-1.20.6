@@ -38,31 +38,32 @@ import net.minecraft.world.item.Items;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider {
-    public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    public ModRecipeProvider(PackOutput output) {
+        super(output);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    protected void buildRecipes(Consumer<FinishedRecipe> recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BANDAGE.get(), 4)
                 .pattern("aaa")
                 .define('a', ItemTags.WOOL)
                 .unlockedBy("has_wool", has(ItemTags.WOOL))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY.get())
                 .pattern(" a ")
                 .pattern("b b")
                 .pattern(" b ")
                 .define('a', Items.IRON_NUGGET)
                 .define('b', Items.LEATHER)
                 .unlockedBy("has_leather", has(Items.LEATHER))
-                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "blood_pack_empty"));
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY.get())
                 .requires(ModItems.BLOOD_PACK.get(), 1)
-                .unlockedBy("has_blood_pack", has(ModItems.BLOOD_PACK))
-                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "blood_pack_empty_unfill"));
+                .unlockedBy("has_blood_pack", has(ModItems.BLOOD_PACK.get()))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty_unfill"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 8)
                 .pattern("c a")
                 .pattern("ca ")
@@ -78,8 +79,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("aaa")
                 .define('a', Items.IRON_INGOT)
                 .define('b', Items.REDSTONE)
-                .define('c', ModItems.BLOOD_PACK_EMPTY)
-                .unlockedBy("has_blood_pack_empty", has(ModItems.BLOOD_PACK_EMPTY))
+                .define('c', ModItems.BLOOD_PACK_EMPTY.get())
+                .unlockedBy("has_blood_pack_empty", has(ModItems.BLOOD_PACK_EMPTY.get()))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.HEALTH_SCANNER.get(), 1)
                 .pattern(" a ")
@@ -87,15 +88,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("aaa")
                 .define('a', Items.IRON_INGOT)
                 .define('b', Items.REDSTONE)
-                .define('c', ModItems.BANDAGE)
-                .unlockedBy("has_bandage", has(ModItems.BANDAGE))
+                .define('c', ModItems.BANDAGE.get())
+                .unlockedBy("has_bandage", has(ModItems.BANDAGE.get()))
                 .save(recipeOutput);
 
-        var book = PatchouliAPI.get().getBookStack(new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+        var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
                 .requires(Items.BOOK, 1)
-                .requires(ModItems.BANDAGE, 1)
+                .requires(ModItems.BANDAGE.get(), 1)
                 .unlockedBy("has_book", has(Items.BOOK))
-                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
     }
 }

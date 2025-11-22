@@ -29,11 +29,11 @@ package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.data.DataProvider;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModDataGeneratorHandler {
 
     @SubscribeEvent
@@ -58,7 +58,7 @@ public class ModDataGeneratorHandler {
         var lp = event.getLookupProvider();
         event.getGenerator().addProvider(
                 event.includeServer(),
-                (DataProvider.Factory<ModRecipeProvider>) output -> new ModRecipeProvider(output, lp)
+                (DataProvider.Factory<ModRecipeProvider>) ModRecipeProvider::new
         );
 
         event.getGenerator().addProvider(

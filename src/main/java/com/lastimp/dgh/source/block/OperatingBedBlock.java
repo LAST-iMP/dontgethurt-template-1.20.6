@@ -48,46 +48,5 @@ public class OperatingBedBlock extends BedBlock {
         super(DyeColor.RED, properties);
         this.registerDefaultState(this.defaultBlockState());
     }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.CONSUME;
-        } else {
-            if (state.getValue(PART) != BedPart.HEAD) {
-                pos = pos.relative(state.getValue(FACING));
-                state = level.getBlockState(pos);
-                if (!state.is(this)) {
-                    return InteractionResult.CONSUME;
-                }
-            }
-
-            if (state.getValue(OCCUPIED)) {
-                if (!this.kickVillagerOutOfBed(level, pos)) {
-                    player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
-                }
-
-                return InteractionResult.SUCCESS;
-            } else {
-                player.startSleepInBed(pos).ifLeft((problem) -> {
-                    if (problem.getMessage() != null) {
-                        player.displayClientMessage(problem.getMessage(), true);
-                    }
-
-                });
-                return InteractionResult.SUCCESS;
-            }
-        }
-    }
-
-    private boolean kickVillagerOutOfBed(Level level, BlockPos blockPos) {
-        List<Villager> list = level.getEntitiesOfClass(Villager.class, new AABB(blockPos), LivingEntity::isSleeping);
-        if (list.isEmpty()) {
-            return false;
-        } else {
-            list.get(0).stopSleeping();
-            return true;
-        }
-    }
 }
 

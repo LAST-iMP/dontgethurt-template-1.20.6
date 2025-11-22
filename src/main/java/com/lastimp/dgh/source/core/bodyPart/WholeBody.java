@@ -83,26 +83,26 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag wholeBody = super.serializeNBT(provider);
+    public CompoundTag serializeNBT() {
+        CompoundTag wholeBody = super.serializeNBT();
         CompoundTag tag = new CompoundTag();
         for (BodyComponents comp : components.keySet()) {
-            tag.put(comp.name(), components.get(comp).serializeNBT(provider));
+            tag.put(comp.name(), components.get(comp).serializeNBT());
         }
         tag.put(WHOLE_BODY.name(), wholeBody);
         return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         if (nbt == null) return;
-        components.put(LEFT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_ARM.name()), LeftArm::new));
-        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_ARM.name()), RightArm::new));
-        components.put(LEFT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_LEG.name()), LeftLeg::new));
-        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_LEG.name()), RightLeg::new));
-        components.put(HEAD, AbstractBody.buildFromNBT(provider, nbt.getCompound(HEAD.name()), Head::new));
-        components.put(TORSO, AbstractBody.buildFromNBT(provider, nbt.getCompound(TORSO.name()), Torso::new));
-        components.put(BLOOD, AbstractBody.buildFromNBT(provider, nbt.getCompound(BLOOD.name()), PlayerBlood::new));
-        super.deserializeNBT(provider, nbt.getCompound(WHOLE_BODY.name()));
+        components.put(LEFT_ARM, AbstractBody.buildFromNBT(nbt.getCompound(LEFT_ARM.name()), LeftArm::new));
+        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(nbt.getCompound(RIGHT_ARM.name()), RightArm::new));
+        components.put(LEFT_LEG, AbstractBody.buildFromNBT(nbt.getCompound(LEFT_LEG.name()), LeftLeg::new));
+        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(nbt.getCompound(RIGHT_LEG.name()), RightLeg::new));
+        components.put(HEAD, AbstractBody.buildFromNBT(nbt.getCompound(HEAD.name()), Head::new));
+        components.put(TORSO, AbstractBody.buildFromNBT(nbt.getCompound(TORSO.name()), Torso::new));
+        components.put(BLOOD, AbstractBody.buildFromNBT(nbt.getCompound(BLOOD.name()), PlayerBlood::new));
+        super.deserializeNBT(nbt.getCompound(WHOLE_BODY.name()));
     }
 }

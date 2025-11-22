@@ -36,7 +36,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
 
@@ -44,14 +44,13 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
-    protected ServerPlayer player;
 
     public static PlayerHealthCapability get(Player player) {
-        return player.getData(ModCapabilities.PLAYER_HEALTH);
+        return player.getCapability(ModCapabilities.PLAYER_HEALTH).resolve().get();
     }
 
     public static void set(Player player, PlayerHealthCapability capability) {
-        player.setData(ModCapabilities.PLAYER_HEALTH, capability);
+        return;
     }
 
     public static <T> T getAndSet(Player player, Function<PlayerHealthCapability, T> function) {
@@ -96,13 +95,13 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        return this.body.serializeNBT(provider);
+    public CompoundTag serializeNBT() {
+        return this.body.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         if (nbt == null) return;
-        this.body.deserializeNBT(provider, nbt);
+        this.body.deserializeNBT(nbt);
     }
 }

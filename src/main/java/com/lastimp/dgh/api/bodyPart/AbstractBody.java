@@ -34,7 +34,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
@@ -125,29 +125,29 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         for (Map.Entry<BodyCondition, ConditionState> e : state.entrySet()) {
-            tag.put(e.getKey().name(), e.getValue().serializeNBT(provider));
+            tag.put(e.getKey().name(), e.getValue().serializeNBT());
         }
         return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         if (nbt == null) return;
         for (BodyCondition condition : this.getBodyConditions()) {
             if (nbt.contains(condition.name())) {
-                state.get(condition).deserializeNBT(provider, nbt.getCompound(condition.name()));
+                state.get(condition).deserializeNBT(nbt.getCompound(condition.name()));
             } else {
                 state.put(condition, new ConditionState(condition.defaultValue));
             }
         }
     }
 
-    public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Function<Void, T> constructor) {
+    public static <T extends AbstractBody> AbstractBody buildFromNBT(CompoundTag nbt, Function<Void, T> constructor) {
         T body = constructor.apply(null);
-        body.deserializeNBT(provider, nbt);
+        body.deserializeNBT(nbt);
         return body;
     }
 }

@@ -73,7 +73,7 @@ public class HealthConditionWidget extends AbstractWidget {
 //        guiGraphics.blitSprite(texture, 100, 32, 0, 0, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
 
 
-            int stringColor = 0xFF000000;
+        int stringColor = 0xFF000000;
         Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
         guiGraphics.drawCenteredString(mc.font, this.getMessage(),
                 this.getX() + 3 + (this.width + iconSize) / 2,

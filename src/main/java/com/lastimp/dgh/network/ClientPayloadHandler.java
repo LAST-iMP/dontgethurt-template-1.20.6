@@ -33,7 +33,6 @@ import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.BloodScanner;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
 
