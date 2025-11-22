@@ -32,10 +32,13 @@ import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.source.item.BloodScanner;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -67,12 +70,27 @@ public class MyReadAllConditionData {
         buf.writeUtf(this.oper);
     }
 
-    public void handlerClient(Supplier<NetworkEvent.Context> ctx) {
-        ClientPayloadHandler.handleReadAllConditionData(this, ctx);
+    public static void handlerClient(final MyReadAllConditionData data, Supplier<NetworkEvent.Context> ctx) {
+        PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
+        OperationType operation = OperationType.valueOf(data.oper());
+        if (operation == OperationType.HEALTH_SCANN && ClientPayloadHandler.getHealthScreen() != null) {
+            ClientPayloadHandler.getHealthScreen().setHealthData(health);
+        } else if (operation == OperationType.BLOOD_SCANN) {
+            UUID uuid = new UUID(data.id_most(), data.id_least());
+            BloodScanner.scanHealth(Minecraft.getInstance().player, health, Minecraft.getInstance().level.getPlayerByUUID(uuid).getScoreboardName());
+        }
     }
 
-    public void handlerServer(Supplier<NetworkEvent.Context> ctx) {
-        ServerPayloadHandler.handleReadAllConditionData(this, ctx);
+    public static void handlerServer(final MyReadAllConditionData data, Supplier<NetworkEvent.Context> ctx) {
+        var context = ctx.get();
+        UUID uuid = new UUID(data.id_most(), data.id_least());
+        ServerPlayer targetPlayer = (ServerPlayer) context.getSender().level().getPlayerByUUID(uuid);
+        PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
+
+        Network.INSTANCE.send(
+                PacketDistributor.PLAYER.with(context::getSender),
+                MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
+        );
     }
 
 

@@ -33,10 +33,12 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
+import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
@@ -57,8 +59,12 @@ public class MyKeyPressedData {
         buf.writeUtf(this.key);
     }
 
-    public void handlerServer(Supplier<NetworkEvent.Context> ctx) {
-        ServerPayloadHandler.handleClientPress(this, ctx);
+    public static void handlerServer(final MyKeyPressedData data, Supplier<NetworkEvent.Context> ctx) {
+        KeyPressedType key = KeyPressedType.valueOf(data.key());
+        ServerPlayer player = ctx.get().getSender();
+        if (key == KeyPressedType.KEY_HEALTH_MENU) {
+            HealthMenuProvider.open(player, player.getUUID(), false);
+        }
     }
 
     public static MyKeyPressedData getInstance(KeyPressedType key) {

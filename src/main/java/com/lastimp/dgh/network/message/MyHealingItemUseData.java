@@ -27,9 +27,13 @@ SOFTWARE.
 
 package com.lastimp.dgh.network.message;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.network.ServerPayloadHandler;
+import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
@@ -62,8 +66,15 @@ public class MyHealingItemUseData {
         buf.writeUtf(this.component);
     }
 
-    public void handlerServer(Supplier<NetworkEvent.Context> ctx) {
-        ServerPayloadHandler.handleHealingItemUsageData(this, ctx);
+    public static void handlerServer(final MyHealingItemUseData data, Supplier<NetworkEvent.Context> ctx) {
+        ServerPlayer sourcePlayer = ctx.get().getSender();
+        UUID targetID = new UUID(data.id_most(), data.id_least());
+        ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
+        ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
+        BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
+
+        DontGetHurt.LOGGER.info(sourcePlayer.getScoreboardName() + " using: " + stack.getItem().toString());
+        HealingHandler.useItemOn(stack, sourcePlayer, target, component);
     }
 
     public static MyHealingItemUseData getInstance(UUID targetId, int slotNum, BodyComponents components) {

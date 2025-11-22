@@ -50,42 +50,19 @@ public class ServerPayloadHandler {
 
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
-        context.enqueueWork(() -> {
-                    UUID uuid = new UUID(data.id_most(), data.id_least());
-                    ServerPlayer targetPlayer = (ServerPlayer) context.getSender().level().getPlayerByUUID(uuid);
-                    PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
-
-                    Network.INSTANCE.send(
-                            PacketDistributor.PLAYER.with(context::getSender),
-                            MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
-                    );
-                });
+        context.enqueueWork(() -> MyReadAllConditionData.handlerServer(data, ctx));
         context.setPacketHandled(true);
     }
 
     public static void handleClientPress(final MyKeyPressedData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
-        context.enqueueWork(() -> {
-                    KeyPressedType key = KeyPressedType.valueOf(data.key());
-                    ServerPlayer player = context.getSender();
-                    if (key == KeyPressedType.KEY_HEALTH_MENU) {
-                        HealthMenuProvider.open(player, player.getUUID(), false);
-                    }
-                });
+        context.enqueueWork(() -> MyKeyPressedData.handlerServer(data, ctx));
         context.setPacketHandled(true);
     }
 
     public static void handleHealingItemUsageData(final MyHealingItemUseData data, Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
-        context.enqueueWork(() -> {
-                    ServerPlayer sourcePlayer = context.getSender();
-                    UUID targetID = new UUID(data.id_most(), data.id_least());
-                    ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
-                    ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
-                    BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
-
-                    HealingHandler.useItemOn(stack, sourcePlayer, target, component);
-        });
+        context.enqueueWork(() -> MyHealingItemUseData.handlerServer(data, ctx));
         context.setPacketHandled(true);
     }
 }

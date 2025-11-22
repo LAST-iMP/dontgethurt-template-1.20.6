@@ -58,7 +58,7 @@ public class Network {
                 MyReadAllConditionData.class,
                 MyReadAllConditionData::toBytes,
                 MyReadAllConditionData::new,
-                MyReadAllConditionData::handlerClient,
+                ServerPayloadHandler::handleReadAllConditionData,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT)
         );
         INSTANCE.registerMessage(
@@ -66,7 +66,7 @@ public class Network {
                 MyReadAllConditionData.class,
                 MyReadAllConditionData::toBytes,
                 MyReadAllConditionData::new,
-                MyReadAllConditionData::handlerServer,
+                ServerPayloadHandler::handleReadAllConditionData,
                 Optional.of(NetworkDirection.PLAY_TO_SERVER)
         );
         INSTANCE.registerMessage(
@@ -74,7 +74,7 @@ public class Network {
                 MyKeyPressedData.class,
                 MyKeyPressedData::toBytes,
                 MyKeyPressedData::new,
-                MyKeyPressedData::handlerServer,
+                ServerPayloadHandler::handleClientPress,
                 Optional.of(NetworkDirection.PLAY_TO_SERVER)
         );
         INSTANCE.registerMessage(
@@ -82,7 +82,7 @@ public class Network {
                 MyHealingItemUseData.class,
                 MyHealingItemUseData::toBytes,
                 MyHealingItemUseData::new,
-                MyHealingItemUseData::handlerServer,
+                ServerPayloadHandler::handleHealingItemUsageData,
                 Optional.of(NetworkDirection.PLAY_TO_SERVER)
         );
     }

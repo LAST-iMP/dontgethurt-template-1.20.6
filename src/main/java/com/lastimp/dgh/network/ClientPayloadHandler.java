@@ -48,16 +48,7 @@ public class ClientPayloadHandler {
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         context.enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
-                OperationType operation = OperationType.valueOf(data.oper());
-                if (operation == OperationType.HEALTH_SCANN && healthScreen != null) {
-                    healthScreen.setHealthData(health);
-                } else if (operation == OperationType.BLOOD_SCANN) {
-                    UUID uuid = new UUID(data.id_most(), data.id_least());
-                    BloodScanner.scanHealth(Minecraft.getInstance().player, health, Minecraft.getInstance().level.getPlayerByUUID(uuid).getScoreboardName());
-                }
-            });
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MyReadAllConditionData.handlerClient(data, ctx));
         });
         context.setPacketHandled(true);
     }
